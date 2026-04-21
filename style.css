@@ -14,6 +14,7 @@
   --muted: #5b7460;
   --border: rgba(78, 168, 92, 0.14);
   --danger: #b42318;
+  --info: #e06900;
   --shadow:
     0 24px 60px rgba(29, 84, 42, 0.14),
     0 8px 20px rgba(29, 84, 42, 0.08);
@@ -318,7 +319,7 @@ button.secondary {
 }
 
 .username-warning.is-warning {
-  color: var(--danger);
+  color: var(--info);
 }
 
 .username-warning.is-info {
