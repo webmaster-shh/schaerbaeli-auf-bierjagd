@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" xml:space="preserve">
+  <style type="text/css">
+    .ring{fill:#D94141;stroke:#FFFFFF;stroke-width:8;}
+    .inner{fill:#2F6FE4;}
+    .slash{fill:#D94141;}
+  </style>
+  <circle class="ring" cx="50" cy="50" r="46"/>
+  <circle class="inner" cx="50" cy="50" r="28"/>
+  <rect class="slash" x="44" y="18" width="12" height="64" rx="6" transform="rotate(45 50 50)"/>
+</svg>

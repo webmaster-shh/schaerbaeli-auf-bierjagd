@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" fill="none">
+  <defs>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
+      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#2b6cb0" flood-opacity="0.18"></feDropShadow>
+    </filter>
+
+    <linearGradient id="capBlue" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#67c8ff"></stop>
+      <stop offset="1" stop-color="#1c7ed6"></stop>
+    </linearGradient>
+
+    <linearGradient id="glassWater" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f7fdff"></stop>
+      <stop offset="0.25" stop-color="#dff4ff"></stop>
+      <stop offset="0.6" stop-color="#a8deff"></stop>
+      <stop offset="1" stop-color="#66bdf5"></stop>
+    </linearGradient>
+
+    <linearGradient id="glassWaterDark" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d7f0ff"></stop>
+      <stop offset="1" stop-color="#4aa8ea"></stop>
+    </linearGradient>
+
+    <linearGradient id="labelBlue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2f84ff"></stop>
+      <stop offset="1" stop-color="#1f57c8"></stop>
+    </linearGradient>
+
+    <linearGradient id="labelScene" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2fbff"></stop>
+      <stop offset="0.55" stop-color="#b8ecff"></stop>
+      <stop offset="1" stop-color="#7fd3ff"></stop>
+    </linearGradient>
+  </defs>
+
+  <g filter="url(#shadow)">
+    <g transform="translate(14 8)">
+      <rect x="20" y="0" width="14" height="10" rx="2.8" fill="url(#capBlue)" stroke="#165c99" stroke-width="1.5"></rect>
+      <path d="M19 4.5h16" stroke="#d9f3ff" stroke-width="1" opacity=".7"></path>
+
+      <path d="M18 10
+               C18 10 20 24 15 37
+               C10.5 48 9 56 9 71
+               V91
+               C9 97 14 102 20 102
+               H34
+               C40 102 45 97 45 91
+               V71
+               C45 56 43.5 48 39 37
+               C34 24 36 10 36 10Z" fill="url(#glassWater)" stroke="#3c8fcb" stroke-width="2.4"></path>
+
+      <path d="M21 14
+               C18.5 31 15 39 13 48" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity=".52"></path>
+
+      <rect x="13.5" y="31" width="27" height="12" rx="2.8" fill="url(#labelBlue)" stroke="#f7fbff" stroke-width="1.6"></rect>
+      <rect x="13" y="49" width="28" height="29" rx="3" fill="url(#labelScene)" stroke="#1c53b7" stroke-width="2"></rect>
+
+      <path d="M16 68
+               C20 64 24 66 28 62
+               C32 58 35 60 38 56
+               V70
+               H16Z" fill="#eaf9ff"></path>
+      <path d="M16 72
+               C20 69 24 71 28 67
+               C32 64 35 66 38 62" stroke="#52b7f5" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
+      <path d="M16 76
+               C19.5 73.5 24 75.5 28 72
+               C32 69 35.5 70.5 38 68" stroke="#2f90df" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".9"></path>
+
+      <rect x="16" y="35" width="22" height="3.8" rx="1.9" fill="#f4fbff" opacity=".95"></rect>
+      <rect x="17" y="82" width="21" height="4" rx="2" fill="#2f6bd7" opacity=".9"></rect>
+
+      <ellipse cx="31" cy="25" rx="2.5" ry="3.5" fill="#ffffff" opacity=".55"></ellipse>
+      <ellipse cx="33" cy="47" rx="2.7" ry="3.2" fill="#ffffff" opacity=".4"></ellipse>
+      <ellipse cx="22" cy="63" rx="2.3" ry="2.8" fill="#ffffff" opacity=".34"></ellipse>
+      <ellipse cx="36" cy="86" rx="2.8" ry="3.3" fill="#dff6ff" opacity=".3"></ellipse>
+
+      <path d="M38 17
+               C39.5 25 40.5 31 40.5 40
+               V87" stroke="url(#glassWaterDark)" stroke-width="2" stroke-linecap="round" opacity=".45"></path>
+    </g>
+  </g>
+</svg>

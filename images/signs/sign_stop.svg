@@ -1,0 +1,20 @@
+<!--?xml version="1.0" encoding="utf-8"?-->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="11.85 1.85 76.3 76.3" xml:space="preserve" role="img" aria-label="Stoppschild im simplen Stil">
+  <style type="text/css">
+    .sign{fill:#D94141;stroke:#FFFFFF;stroke-width:8;stroke-linejoin:round;}
+    .text{
+      fill:#FFFFFF;
+      stroke:#FFFFFF;
+      stroke-width:0.45px;
+      paint-order:stroke fill;
+      font-family:Arial, Helvetica, sans-serif;
+      font-size:19px;
+      font-weight:800;
+      text-anchor:middle;
+      dominant-baseline:middle;
+      letter-spacing:0.8px;
+    }
+  </style>
+  <polygon class="sign" points="64.14,5.85 35.86,5.85 15.85,25.86 15.85,54.14 35.86,74.15 64.14,74.15 84.15,54.14 84.15,25.86"></polygon>
+  <text class="text" x="51" y="42">STOP</text>
+</svg>

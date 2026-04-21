@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Schärbäli uf Bierjagd</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <div id="offlineScreen" class="screen offline-screen">
+      <div class="offline-card">
+        <div class="offline-icon">⚠️</div>
+        <h2>Spiel zurzeit nicht erreichbar</h2>
+        <p>
+          Bitte versuche es später nochmals.<br />
+          Der Webmaster wurde bereits benachrichtigt.
+        </p>
+      </div>
+    </div>
+
+    <div id="startScreen" class="screen active">
+      <div class="hero-badge">Gugge Schärbähufä Hergiswil</div>
+      <img class="logo-large" src="images/logo.svg" alt="Schärbäli Logo" decoding="async" />
+
+      <h1>Schärbäli uf Bierjagd</h1>
+      <p class="intro">
+        S’Schärbäli muess gnueg Vorrat für de Schmudo organisiere.
+        Schnapp dier so viel 3er-Bierpäckli wie möglich, wiich de Hindernis us
+        und pass uf: Wasserfläsche gäbed dir Minuspünkt.
+      </p>
+
+      <div class="input-group">
+        <label for="username">Benutzername</label>
+        <input id="username" type="text" maxlength="20" placeholder="z. B. Aline" autocomplete="nickname" />
+        <p id="usernameWarning" class="username-warning"></p>
+        <button id="startBtn" type="button">Jagd starte</button>
+      </div>
+
+      <button class="mini-info" id="miniInfo" type="button">🏆 Top 10 Bierjäger</button>
+    </div>
+
+    <div id="gameScreen" class="screen">
+      <div class="hud">
+        <span id="playerLabel">Spieler: -</span>
+        <span id="scoreLabel">Bier: 0</span>
+      </div>
+
+      <div class="canvas-shell">
+        <div class="canvas-stage">
+          <canvas id="gameCanvas" width="400" height="700"></canvas>
+
+          <div id="startOverlay" class="start-overlay hidden">
+            <div class="start-overlay-card">
+              Klick, Touch oder Läärtaste zum Startä
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="performanceWarning" class="performance-warning hidden">
+        Das Spiel läuft aktuell mit reduzierter Bildrate. Möglicherweise ist der Stromsparmodus aktiv.
+      </div>
+    </div>
+
+    <div id="endScreen" class="screen">
+      <div id="resultView" class="result-view">
+        <h2 id="endTitle">Game Over</h2>
+        <p class="final-score-big" id="finalScore">Du hesch 0 Bier gsammlet.</p>
+        <p class="rank-text-big" id="rankText"></p>
+
+        <div id="legendBox" class="legend-box hidden">
+          <div class="legend-title">DU BISCH E LEGÄNDE</div>
+          <div class="legend-subtitle">
+            Das isch kei normali Sammelrundi gsi. Das isch es Meisterwerk vo
+            Durstvorsorg, Eskalationsplanig und absoluter Grössi.
+          </div>
+        </div>
+
+        <div class="row">
+          <button id="restartBtn" type="button">Nomal uf Bierjagd</button>
+          <button id="showLeaderboardBtn" class="secondary" type="button">Highscore aluege</button>
+        </div>
+      </div>
+
+      <div id="leaderboardView" class="leaderboard-view hidden">
+        <h2>Top 10 Bierjäger</h2>
+        <p class="center" id="saveStatus">Lade Highscore...</p>
+
+        <div class="leaderboard">
+          <ol id="leaderboardList"></ol>
+        </div>
+
+        <div class="row">
+          <button id="changeUserBtn" class="secondary" type="button">Zrugg zur Startsiite</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+</body>
+</html>
