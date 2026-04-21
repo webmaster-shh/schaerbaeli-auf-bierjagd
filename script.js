@@ -944,7 +944,7 @@ async function endGame() {
 async function loadLeaderboard() {
   if (!dbAvailable) return;
 
-  leaderboardList.innerHTML = "<li>Lade Top 10...</li>";
+  leaderboardList.innerHTML = "<li>Lade Top 30...</li>";
   saveStatus.textContent = "Lade Highscore...";
 
   const { data, error } = await supabaseClient
@@ -952,7 +952,7 @@ async function loadLeaderboard() {
     .select("username, highscore, updated_at")
     .order("highscore", { ascending: false })
     .order("updated_at", { ascending: true })
-    .limit(10);
+    .limit(30);
 
   if (error) {
     console.error(error);
