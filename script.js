@@ -273,16 +273,16 @@ async function checkDatabaseConnection() {
 
 function updateDifficultyCache(currentTime) {
   const elapsedSeconds = (currentTime - gameStartTime) / 1000;
-  const levelFromTime = Math.floor(elapsedSeconds / 14);
-  const levelFromScore = Math.floor(score / 24);
+  const levelFromTime = Math.floor(elapsedSeconds / 16);
+  const levelFromScore = Math.floor(score / 28);
   const newLevel = Math.max(levelFromTime, levelFromScore);
 
   if (newLevel === difficultyLevel) return;
 
   difficultyLevel = newLevel;
-  cachedPipeSpeed = Math.min(5.2, basePipeSpeed + difficultyLevel * 0.125);
-  cachedPipeInterval = Math.max(900, basePipeInterval - difficultyLevel * 50);
-  cachedPipeGap = Math.max(180, basePipeGap - difficultyLevel * 2.1);
+  cachedPipeSpeed = Math.min(4.9, basePipeSpeed + difficultyLevel * 0.1);
+  cachedPipeInterval = Math.max(980, basePipeInterval - difficultyLevel * 38);
+  cachedPipeGap = Math.max(185, basePipeGap - difficultyLevel * 1.6);
 }
 
 function initGame() {
