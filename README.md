@@ -62,7 +62,7 @@ Aktuell enthält das Spiel unter anderem folgende Funktionen:
 
 ## Projektstatus
 
-**Status:** Testversion
+**Status:** Testversion  
 **Aktuelle Version:** `v0.9.0-beta`
 
 
