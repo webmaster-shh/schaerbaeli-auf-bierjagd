@@ -3,40 +3,114 @@ const SUPABASE_URL = "https://hxqvuuvzxbdvccqwiwpf.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_24ByLN2dz1BSVTjx3qL8Lw_vJwe47dO";
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// DOM
-const startScreen = document.getElementById("startScreen");
-const gameScreen = document.getElementById("gameScreen");
-const endScreen = document.getElementById("endScreen");
-const offlineScreen = document.getElementById("offlineScreen");
-
-const usernameInput = document.getElementById("username");
-const startBtn = document.getElementById("startBtn");
-const restartBtn = document.getElementById("restartBtn");
-const changeUserBtn = document.getElementById("changeUserBtn");
-const showLeaderboardBtn = document.getElementById("showLeaderboardBtn");
-const miniInfo = document.getElementById("miniInfo");
-const usernameWarning = document.getElementById("usernameWarning");
-
-const playerLabel = document.getElementById("playerLabel");
-const scoreLabel = document.getElementById("scoreLabel");
-const finalScore = document.getElementById("finalScore");
-const saveStatus = document.getElementById("saveStatus");
-const leaderboardList = document.getElementById("leaderboardList");
-const rankText = document.getElementById("rankText");
-const endTitle = document.getElementById("endTitle");
-const legendBox = document.getElementById("legendBox");
-const performanceWarning = document.getElementById("performanceWarning");
-
-const resultView = document.getElementById("resultView");
-const leaderboardView = document.getElementById("leaderboardView");
-
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
-const startOverlay = document.getElementById("startOverlay");
+// Storage / misc constants
+const USERNAME_STORAGE_KEY = "player_username";
+const LOW_FPS_CHECK_INTERVAL = 2000;
+const FPS_DISPLAY_INTERVAL = 250;
+const USERNAME_CHECK_DELAY = 350;
 
 // Game size
 const GAME_WIDTH = 400;
 const GAME_HEIGHT = 700;
+
+// Physics / gameplay
+const gravity = 0.42;
+const jumpStrength = -8;
+const pickupPoints = 3;
+
+const basePipeSpeed = 2.7;
+const basePipeInterval = 1450;
+const basePipeGap = 220;
+
+// Sizes
+const pipeWidth = 84;
+const groundHeight = 0;
+const postWidth = 16;
+const signWidth = 78;
+const signHeight = 78;
+const plainPostWidth = signWidth;
+
+const beerWidth = 44;
+const beerHeight = 44;
+const beerPadding = 22;
+const beerBobAmount = 3;
+const beerBobSpeed = 0.08;
+
+const waterWidth = 24;
+const waterHeight = 34;
+const waterEdgePadding = 8;
+const waterBobAmount = 2.5;
+const waterBobSpeed = 0.065;
+
+const scoreFlashDuration = 180;
+const offscreenRemovalX = -20;
+const playerBaseWidth = 100;
+const playerAspectRatio = 2 / 3;
+
+// Round signs
+const ROUND_SIGN_KEYS = new Set(["tempo30", "noentry", "noparking", "stop"]);
+
+// DOM helpers
+function getById(id) {
+  return document.getElementById(id);
+}
+
+// DOM
+const startScreen = getById("startScreen");
+const helpScreen = getById("helpScreen");
+const privacyScreen = getById("privacyScreen");
+const impressumScreen = getById("impressumScreen");
+const gameScreen = getById("gameScreen");
+const endScreen = getById("endScreen");
+const offlineScreen = getById("offlineScreen");
+
+const screens = [
+  startScreen,
+  helpScreen,
+  privacyScreen,
+  impressumScreen,
+  gameScreen,
+  endScreen,
+  offlineScreen
+];
+
+const usernameInput = getById("username");
+const startBtn = getById("startBtn");
+const restartBtn = getById("restartBtn");
+const changeUserBtn = getById("changeUserBtn");
+const showLeaderboardBtn = getById("showLeaderboardBtn");
+const miniInfo = getById("miniInfo");
+const usernameWarning = getById("usernameWarning");
+
+const helpBtn = getById("helpBtn");
+const backToStartBtn = getById("backToStartBtn");
+const privacyBtn = getById("privacyBtn");
+const impressumBtn = getById("impressumBtn");
+const privacyFromHelpBtn = getById("privacyFromHelpBtn");
+const impressumFromHelpBtn = getById("impressumFromHelpBtn");
+const backFromPrivacyBtn = getById("backFromPrivacyBtn");
+const backFromImpressumBtn = getById("backFromImpressumBtn");
+
+const playerLabel = getById("playerLabel");
+const scoreLabel = getById("scoreLabel");
+const finalScore = getById("finalScore");
+const saveStatus = getById("saveStatus");
+const leaderboardList = getById("leaderboardList");
+const leaderboardTitle = getById("leaderboardTitle");
+const toggleLeaderboardBtn = getById("toggleLeaderboardBtn");
+const rankText = getById("rankText");
+const platinumBox = getById("platinumBox");
+const goldBox = getById("goldBox");
+const performanceWarning = getById("performanceWarning");
+const placementText = getById("placementText");
+const highscoreStatusText = getById("highscoreStatusText");
+
+const resultView = getById("resultView");
+const leaderboardView = getById("leaderboardView");
+
+const canvas = getById("gameCanvas");
+const ctx = canvas.getContext("2d");
+const startOverlay = getById("startOverlay");
 
 // Images
 function loadImage(src) {
@@ -60,45 +134,19 @@ const pipeSigns = [
   { key: "beer", image: loadImage("images/signs/sign_beer.svg") }
 ];
 
-// Config
-const gravity = 0.42;
-const jumpStrength = -8;
-const pickupPoints = 3;
-
-const basePipeSpeed = 2.7;
-const basePipeInterval = 1450;
-const basePipeGap = 220;
-
-const pipeWidth = 84;
-const groundHeight = 0;
-const postWidth = 16;
-const signWidth = 78;
-const signHeight = 78;
-const plainPostWidth = signWidth;
-
-const beerWidth = 44;
-const beerHeight = 44;
-const beerPadding = 22;
-const beerBobAmount = 3;
-const beerBobSpeed = 0.08;
-
-const waterWidth = 24;
-const waterHeight = 34;
-const waterEdgePadding = 8;
-const waterBobAmount = 2.5;
-const waterBobSpeed = 0.065;
-
-const scoreFlashDuration = 180;
+const pipeSignImageMap = Object.fromEntries(
+  pipeSigns.map(sign => [sign.key, sign.image])
+);
 
 // State
-let username = localStorage.getItem("flappy_username") || "";
+let username = localStorage.getItem(USERNAME_STORAGE_KEY) || "";
 usernameInput.value = username;
 
 let waitingForFirstInput = false;
 let gameRunning = false;
 let animationId = null;
 let score = 0;
-let bird = null;
+let player = null;
 let pipes = [];
 let beers = [];
 let waters = [];
@@ -110,6 +158,7 @@ let pipesUntilNextWater = 0;
 let usernameCheckTimer = null;
 let lastCheckedUsername = "";
 let lastUsernameExists = false;
+let usernameCheckRequestId = 0;
 
 let difficultyLevel = 0;
 let cachedPipeSpeed = basePipeSpeed;
@@ -128,9 +177,10 @@ let fpsLastTime = 0;
 let dbAvailable = true;
 let webmasterNotified = false;
 
-let performanceWarningVisible = false;
 let lowFpsCheckStart = 0;
 let lowFpsFrameCount = 0;
+
+let leaderboardShowAll = false;
 
 // Helpers
 function clamp(value, min, max) {
@@ -142,7 +192,7 @@ function randInt(min, max) {
 }
 
 function imageReady(image) {
-  return image.complete && image.naturalWidth > 0;
+  return !!image && image.complete && image.naturalWidth > 0;
 }
 
 function sanitizeUsername(name) {
@@ -155,12 +205,24 @@ function escapeHtml(text) {
   return div.innerHTML;
 }
 
-function showScreen(screen) {
-  startScreen.classList.remove("active");
-  gameScreen.classList.remove("active");
-  endScreen.classList.remove("active");
-  offlineScreen.classList.remove("active");
-  screen.classList.add("active");
+function isRoundSign(pipe) {
+  return !pipe.isPlainPost && ROUND_SIGN_KEYS.has(pipe.signKey);
+}
+
+function circleIntersectsRect(circleX, circleY, radius, rect) {
+  const closestX = clamp(circleX, rect.left, rect.right);
+  const closestY = clamp(circleY, rect.top, rect.bottom);
+
+  const dx = circleX - closestX;
+  const dy = circleY - closestY;
+
+  return dx * dx + dy * dy < radius * radius;
+}
+
+function showScreen(activeScreen) {
+  for (const screen of screens) {
+    screen.classList.toggle("active", screen === activeScreen);
+  }
 }
 
 function showResultView() {
@@ -171,6 +233,11 @@ function showResultView() {
 function showLeaderboardView() {
   resultView.classList.add("hidden");
   leaderboardView.classList.remove("hidden");
+}
+
+function goToStartScreen() {
+  showScreen(startScreen);
+  showResultView();
 }
 
 function updateScoreUI() {
@@ -184,19 +251,16 @@ function updateStartOverlay() {
 function setPerformanceWarning(visible) {
   if (!performanceWarning) return;
   performanceWarning.classList.toggle("hidden", !visible);
-  performanceWarningVisible = visible;
 }
 
 function resetPerformanceMonitor() {
-  performanceWarningVisible = false;
   lowFpsCheckStart = 0;
   lowFpsFrameCount = 0;
   setPerformanceWarning(false);
 }
 
 function monitorPerformance(now) {
-  if (!gameRunning) return;
-  if (!performanceWarning) return;
+  if (!gameRunning || !performanceWarning) return;
 
   if (!lowFpsCheckStart) {
     lowFpsCheckStart = now;
@@ -206,13 +270,42 @@ function monitorPerformance(now) {
   lowFpsFrameCount++;
 
   const elapsed = now - lowFpsCheckStart;
-  if (elapsed < 2000) return;
+  if (elapsed < LOW_FPS_CHECK_INTERVAL) return;
 
   const avgFps = Math.round((lowFpsFrameCount * 1000) / elapsed);
   setPerformanceWarning(avgFps <= 35);
 
   lowFpsCheckStart = now;
   lowFpsFrameCount = 0;
+}
+
+function resetFpsCounter() {
+  fps = 0;
+  fpsFrameCount = 0;
+  fpsLastTime = 0;
+}
+
+function clearUsernameWarning() {
+  usernameWarning.textContent = "";
+  usernameWarning.classList.remove("is-warning", "is-info");
+}
+
+function setUsernameWarningState(text, type) {
+  usernameWarning.textContent = text;
+  usernameWarning.classList.toggle("is-warning", type === "warning");
+  usernameWarning.classList.toggle("is-info", type === "info");
+}
+
+function resetEndScreenState() {
+  finalScore.textContent = "Du hesch 0 Bier gsammlet.";
+  rankText.textContent = "";
+  saveStatus.textContent = "";
+  placementText.textContent = "";
+  highscoreStatusText.textContent = "";
+  highscoreStatusText.classList.remove("is-success", "is-muted");
+  goldBox.classList.add("hidden");
+  platinumBox.classList.add("hidden");
+  showResultView();
 }
 
 function resizeCanvas() {
@@ -232,7 +325,9 @@ function resizeCanvas() {
   ctx.scale(dpr, dpr);
   ctx.imageSmoothingEnabled = true;
 
-  if (bird) render(performance.now());
+  if (player) {
+    render(performance.now());
+  }
 }
 
 function getRandomWaterSpawnCount(level) {
@@ -248,23 +343,43 @@ function getPipeSignRect(pipe) {
   };
 }
 
-function getPipeSignByKey(key) {
-  const sign = pipeSigns.find(item => item.key === key);
-  return sign ? sign.image : null;
+function getRoundSignCollision(pipe, isTop) {
+  return {
+    x: pipe.x + pipeWidth / 2,
+    y: isTop
+      ? pipe.topHeight - signHeight / 2
+      : pipe.bottomY + signHeight / 2,
+    radius: pipeWidth / 2
+  };
 }
 
-async function notifyWebmaster() {
+function getPipeSignByKey(key) {
+  return pipeSignImageMap[key] || null;
+}
+
+function stopGameLoop() {
+  if (animationId !== null) {
+    cancelAnimationFrame(animationId);
+    animationId = null;
+  }
+}
+
+function notifyWebmaster() {
   if (webmasterNotified) return;
   webmasterNotified = true;
   console.error("Spiel nicht erreichbar: Datenbankverbindung fehlgeschlagen.");
 }
 
 async function checkDatabaseConnection() {
-  const { error } = await supabaseClient.from("scores").select("username").limit(1);
+  const { error } = await supabaseClient
+    .from("scores")
+    .select("username")
+    .limit(1);
+
   dbAvailable = !error;
 
   if (!dbAvailable) {
-    await notifyWebmaster();
+    notifyWebmaster();
     showScreen(offlineScreen);
   }
 
@@ -285,20 +400,21 @@ function updateDifficultyCache(currentTime) {
   cachedPipeGap = Math.max(185, basePipeGap - difficultyLevel * 1.6);
 }
 
-function initGame() {
-  const now = performance.now();
-  const birdBaseWidth = 100;
-  const birdAspectRatio = 2 / 3;
-
-  bird = {
+function createInitialPlayer() {
+  return {
     x: 100,
     y: 260,
-    width: birdBaseWidth,
-    height: birdBaseWidth * birdAspectRatio,
+    width: playerBaseWidth,
+    height: playerBaseWidth * playerAspectRatio,
     velocity: 0,
     rotation: 0
   };
+}
 
+function initGame() {
+  const now = performance.now();
+
+  player = createInitialPlayer();
   pipes = [];
   beers = [];
   waters = [];
@@ -319,18 +435,13 @@ function initGame() {
 
   resetPerformanceMonitor();
   updateScoreUI();
-  endTitle.textContent = "Game Over";
-  finalScore.textContent = "Du hesch 0 Bier gsammlet.";
-  rankText.textContent = "";
-  saveStatus.textContent = "";
-  legendBox.classList.add("hidden");
-
-  showResultView();
+  resetEndScreenState();
 }
 
 function createBeerForPipe(pipe) {
   const minY = pipe.topHeight + beerPadding;
   const maxY = pipe.bottomY - beerHeight - beerPadding;
+
   if (maxY <= minY) return;
 
   beers.push({
@@ -385,7 +496,10 @@ function createPipe() {
   if (pipesUntilNextWater <= 0) {
     createWaterForPipe(pipe);
     pipesUntilNextWater = getRandomWaterSpawnCount(difficultyLevel);
-  } else if (Math.random() < Math.max(0.42, 0.82 - difficultyLevel * 0.03)) {
+    return;
+  }
+
+  if (Math.random() < Math.max(0.42, 0.82 - difficultyLevel * 0.03)) {
     createBeerForPipe(pipe);
   }
 }
@@ -395,23 +509,23 @@ function clearFrame() {
   ctx.clearRect(0, 0, GAME_WIDTH, GAME_HEIGHT);
 }
 
-function drawBird() {
+function drawPlayer() {
   ctx.save();
-  ctx.translate(bird.x, bird.y);
-  ctx.rotate(bird.rotation);
+  ctx.translate(Math.round(player.x), Math.round(player.y));
+  ctx.rotate(player.rotation);
 
   if (imageReady(playerImage)) {
     ctx.drawImage(
       playerImage,
-      -bird.width / 2,
-      -bird.height / 2,
-      bird.width,
-      bird.height
+      -player.width / 2,
+      -player.height / 2,
+      player.width,
+      player.height
     );
   } else {
     ctx.fillStyle = "#58aa4f";
     ctx.beginPath();
-    ctx.arc(0, 0, bird.width / 2, 0, Math.PI * 2);
+    ctx.arc(0, 0, player.width / 2, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -421,46 +535,71 @@ function drawBird() {
 function drawPosterColumn(x, y, width, height) {
   if (height <= 0) return;
 
-  x = Math.round(x);
-  y = Math.round(y);
-  width = Math.round(width);
-  height = Math.round(height);
+  const roundedX = Math.round(x);
+  const roundedY = Math.round(y);
+  const roundedWidth = Math.round(width);
+  const roundedHeight = Math.round(height);
 
   ctx.save();
 
-  const bodyGradient = ctx.createLinearGradient(x, 0, x + width, 0);
+  const bodyGradient = ctx.createLinearGradient(
+    roundedX,
+    0,
+    roundedX + roundedWidth,
+    0
+  );
   bodyGradient.addColorStop(0, "#c8ccd2");
   bodyGradient.addColorStop(0.18, "#f5f6f8");
   bodyGradient.addColorStop(0.5, "#ffffff");
   bodyGradient.addColorStop(0.82, "#d7dbe0");
   bodyGradient.addColorStop(1, "#b5bbc3");
   ctx.fillStyle = bodyGradient;
-  ctx.fillRect(x, y, width, height);
+  ctx.fillRect(roundedX, roundedY, roundedWidth, roundedHeight);
 
   const ringHeight = 12;
-  const ringGradient = ctx.createLinearGradient(x, 0, x + width, 0);
+  const ringGradient = ctx.createLinearGradient(
+    roundedX,
+    0,
+    roundedX + roundedWidth,
+    0
+  );
   ringGradient.addColorStop(0, "#7a8088");
   ringGradient.addColorStop(0.5, "#c6ccd3");
   ringGradient.addColorStop(1, "#6f757d");
   ctx.fillStyle = ringGradient;
-  ctx.fillRect(x, y, width, ringHeight);
-  ctx.fillRect(x, y + height - ringHeight, width, ringHeight);
+  ctx.fillRect(roundedX, roundedY, roundedWidth, ringHeight);
+  ctx.fillRect(
+    roundedX,
+    roundedY + roundedHeight - ringHeight,
+    roundedWidth,
+    ringHeight
+  );
 
   ctx.fillStyle = "rgba(255,255,255,0.28)";
-  ctx.fillRect(x + width * 0.14, y + ringHeight, Math.max(2, width * 0.08), height - ringHeight * 2);
+  ctx.fillRect(
+    roundedX + roundedWidth * 0.14,
+    roundedY + ringHeight,
+    Math.max(2, roundedWidth * 0.08),
+    roundedHeight - ringHeight * 2
+  );
 
   ctx.fillStyle = "rgba(0,0,0,0.06)";
-  ctx.fillRect(x + width * 0.82, y + ringHeight, Math.max(2, width * 0.05), height - ringHeight * 2);
+  ctx.fillRect(
+    roundedX + roundedWidth * 0.82,
+    roundedY + ringHeight,
+    Math.max(2, roundedWidth * 0.05),
+    roundedHeight - ringHeight * 2
+  );
 
   const posterPaddingX = 8;
-  const posterTop = y + 22;
-  const posterBottom = y + height - 22;
+  const posterTop = roundedY + 22;
+  const posterBottom = roundedY + roundedHeight - 22;
   const posterAreaHeight = posterBottom - posterTop;
 
   if (posterAreaHeight > 40) {
     const columns = 2;
     const gap = 6;
-    const posterWidth = (width - posterPaddingX * 2 - gap) / columns;
+    const posterWidth = (roundedWidth - posterPaddingX * 2 - gap) / columns;
     const palette = [
       ["#ff4d6d", "#ffb703"],
       ["#06d6a0", "#118ab2"],
@@ -480,7 +619,7 @@ function drawPosterColumn(x, y, width, height) {
       );
 
       for (let col = 0; col < columns; col++) {
-        const px = x + posterPaddingX + col * (posterWidth + gap);
+        const px = roundedX + posterPaddingX + col * (posterWidth + gap);
         const py = currentY + (col % 2) * 4;
 
         if (py + posterHeight > posterBottom) continue;
@@ -535,14 +674,23 @@ function drawPipeSign(pipe, y, height, isTop) {
 
   if (isTop) {
     ctx.save();
-    ctx.translate(Math.round(imageX + signWidth / 2), Math.round(imageY + signHeight / 2));
+    ctx.translate(
+      Math.round(imageX + signWidth / 2),
+      Math.round(imageY + signHeight / 2)
+    );
     ctx.rotate(Math.PI);
     ctx.drawImage(signImage, -signWidth / 2, -signHeight / 2, signWidth, signHeight);
     ctx.restore();
     return;
   }
 
-  ctx.drawImage(signImage, Math.round(imageX), Math.round(imageY), signWidth, signHeight);
+  ctx.drawImage(
+    signImage,
+    Math.round(imageX),
+    Math.round(imageY),
+    signWidth,
+    signHeight
+  );
 }
 
 function drawPipePart(pipe, y, height, isTop) {
@@ -564,7 +712,12 @@ function drawPipePart(pipe, y, height, isTop) {
   postGradient.addColorStop(1, "#89939e");
 
   ctx.fillStyle = postGradient;
-  ctx.fillRect(Math.round(postX), Math.round(y), Math.round(postWidth), Math.round(height));
+  ctx.fillRect(
+    Math.round(postX),
+    Math.round(y),
+    Math.round(postWidth),
+    Math.round(height)
+  );
 
   ctx.fillStyle = "rgba(255,255,255,0.28)";
   ctx.fillRect(Math.round(postX + 2), Math.round(y), 2, Math.round(height));
@@ -580,27 +733,26 @@ function drawPipe(pipe) {
 }
 
 function drawPipes() {
-  for (let i = 0; i < pipes.length; i++) drawPipe(pipes[i]);
+  for (const pipe of pipes) {
+    drawPipe(pipe);
+  }
+}
+
+function drawFloatingItems(items, image, bobAmount, yKey) {
+  if (!imageReady(image)) return;
+
+  for (const item of items) {
+    const floatY = item[yKey] + Math.sin(item.bob) * bobAmount;
+    ctx.drawImage(image, item.x, floatY, item.width, item.height);
+  }
 }
 
 function drawBeers() {
-  if (!imageReady(beerImage)) return;
-
-  for (let i = 0; i < beers.length; i++) {
-    const beer = beers[i];
-    const floatY = beer.y + Math.sin(beer.bob) * beerBobAmount;
-    ctx.drawImage(beerImage, beer.x, floatY, beer.width, beer.height);
-  }
+  drawFloatingItems(beers, beerImage, beerBobAmount, "y");
 }
 
 function drawWaters() {
-  if (!imageReady(waterImage)) return;
-
-  for (let i = 0; i < waters.length; i++) {
-    const water = waters[i];
-    const floatY = water.baseY + Math.sin(water.bob) * waterBobAmount;
-    ctx.drawImage(waterImage, water.x, floatY, water.width, water.height);
-  }
+  drawFloatingItems(waters, waterImage, waterBobAmount, "baseY");
 }
 
 function drawScoreOnCanvas(now) {
@@ -628,12 +780,12 @@ function drawScoreOnCanvas(now) {
   ctx.restore();
 }
 
-function getBirdBox() {
+function getPlayerBox() {
   return {
-    left: bird.x - bird.width / 2 + 18,
-    right: bird.x + bird.width / 2 - 18,
-    top: bird.y - bird.height / 2 + 10,
-    bottom: bird.y + bird.height / 2 - 10
+    left: player.x - player.width / 2 + 18,
+    right: player.x + player.width / 2 - 18,
+    top: player.y - player.height / 2 + 10,
+    bottom: player.y + player.height / 2 - 10
   };
 }
 
@@ -646,12 +798,13 @@ function isOverlapping(a, b) {
   );
 }
 
-function checkItemCollection(items, points, flashColor, now, birdBox, isWater = false) {
+function checkItemCollection(items, points, flashColor, now, playerBox, isWater = false) {
   const bobAmount = isWater ? waterBobAmount : 0;
+  const yKey = isWater ? "baseY" : "y";
 
   for (let i = items.length - 1; i >= 0; i--) {
     const item = items[i];
-    const itemY = (isWater ? item.baseY : item.y) + Math.sin(item.bob) * bobAmount;
+    const itemY = item[yKey] + Math.sin(item.bob) * bobAmount;
 
     const itemBox = {
       x: item.x,
@@ -660,7 +813,7 @@ function checkItemCollection(items, points, flashColor, now, birdBox, isWater = 
       height: item.height
     };
 
-    if (isOverlapping(birdBox, itemBox)) {
+    if (isOverlapping(playerBox, itemBox)) {
       score = Math.max(0, score + points);
       updateScoreUI();
       scoreFlashUntil = now + scoreFlashDuration;
@@ -670,21 +823,50 @@ function checkItemCollection(items, points, flashColor, now, birdBox, isWater = 
   }
 }
 
-function checkCollision(birdBox) {
-  if (birdBox.top <= 0 || birdBox.bottom >= GAME_HEIGHT - groundHeight) return true;
+function checkCollision(playerBox) {
+  if (playerBox.top <= 0 || playerBox.bottom >= GAME_HEIGHT - groundHeight) {
+    return true;
+  }
 
-  for (let i = 0; i < pipes.length; i++) {
-    const pipe = pipes[i];
+  for (const pipe of pipes) {
     const signRect = getPipeSignRect(pipe);
 
     const overlapsX =
-      birdBox.right > signRect.x &&
-      birdBox.left < signRect.x + signRect.width;
+      playerBox.right > signRect.x &&
+      playerBox.left < signRect.x + signRect.width;
 
-    const hitsTop = birdBox.top < pipe.topHeight;
-    const hitsBottom = birdBox.bottom > pipe.bottomY;
+    if (!overlapsX) {
+      continue;
+    }
 
-    if (overlapsX && (hitsTop || hitsBottom)) return true;
+    if (pipe.isPlainPost || !isRoundSign(pipe)) {
+      const hitsTop = playerBox.top < pipe.topHeight;
+      const hitsBottom = playerBox.bottom > pipe.bottomY;
+
+      if (hitsTop || hitsBottom) {
+        return true;
+      }
+
+      continue;
+    }
+
+    const topSign = getRoundSignCollision(pipe, true);
+    const bottomSign = getRoundSignCollision(pipe, false);
+
+    const hitsTopRectPart = playerBox.top < topSign.y;
+    const hitsBottomRectPart = playerBox.bottom > bottomSign.y;
+
+    const hitsTopRoundPart =
+      playerBox.bottom > topSign.y &&
+      circleIntersectsRect(topSign.x, topSign.y, topSign.radius, playerBox);
+
+    const hitsBottomRoundPart =
+      playerBox.top < bottomSign.y &&
+      circleIntersectsRect(bottomSign.x, bottomSign.y, bottomSign.radius, playerBox);
+
+    if (hitsTopRectPart || hitsBottomRectPart || hitsTopRoundPart || hitsBottomRoundPart) {
+      return true;
+    }
   }
 
   return false;
@@ -693,27 +875,53 @@ function checkCollision(birdBox) {
 function drawHitboxes() {
   if (!showHitboxes) return;
 
-  const birdBox = getBirdBox();
+  const playerBox = getPlayerBox();
 
   ctx.save();
+  ctx.lineWidth = 2;
 
   ctx.strokeStyle = "rgba(255, 0, 0, 0.95)";
-  ctx.lineWidth = 2;
   ctx.strokeRect(
-    birdBox.left,
-    birdBox.top,
-    birdBox.right - birdBox.left,
-    birdBox.bottom - birdBox.top
+    playerBox.left,
+    playerBox.top,
+    playerBox.right - playerBox.left,
+    playerBox.bottom - playerBox.top
   );
 
   ctx.strokeStyle = "rgba(0, 120, 255, 0.95)";
 
-  for (let i = 0; i < pipes.length; i++) {
-    const pipe = pipes[i];
+  for (const pipe of pipes) {
     const signRect = getPipeSignRect(pipe);
 
-    ctx.strokeRect(signRect.x, 0, signRect.width, pipe.topHeight);
-    ctx.strokeRect(signRect.x, pipe.bottomY, signRect.width, GAME_HEIGHT - pipe.bottomY - groundHeight);
+    if (pipe.isPlainPost || !isRoundSign(pipe)) {
+      ctx.strokeRect(signRect.x, 0, signRect.width, pipe.topHeight);
+      ctx.strokeRect(
+        signRect.x,
+        pipe.bottomY,
+        signRect.width,
+        GAME_HEIGHT - pipe.bottomY - groundHeight
+      );
+      continue;
+    }
+
+    const topSign = getRoundSignCollision(pipe, true);
+    const bottomSign = getRoundSignCollision(pipe, false);
+
+    ctx.strokeRect(signRect.x, 0, signRect.width, topSign.y);
+    ctx.strokeRect(
+      signRect.x,
+      bottomSign.y,
+      signRect.width,
+      GAME_HEIGHT - bottomSign.y - groundHeight
+    );
+
+    ctx.beginPath();
+    ctx.arc(topSign.x, topSign.y, topSign.radius, 0, Math.PI);
+    ctx.stroke();
+
+    ctx.beginPath();
+    ctx.arc(bottomSign.x, bottomSign.y, topSign.radius, Math.PI, Math.PI * 2);
+    ctx.stroke();
   }
 
   ctx.restore();
@@ -722,11 +930,14 @@ function drawHitboxes() {
 function drawFps(now) {
   if (!showFps) return;
 
-  if (!fpsLastTime) fpsLastTime = now;
+  if (!fpsLastTime) {
+    fpsLastTime = now;
+  }
+
   fpsFrameCount++;
 
   const diff = now - fpsLastTime;
-  if (diff >= 250) {
+  if (diff >= FPS_DISPLAY_INTERVAL) {
     fps = Math.round((fpsFrameCount * 1000) / diff);
     fpsFrameCount = 0;
     fpsLastTime = now;
@@ -748,7 +959,7 @@ function render(now) {
   drawPipes();
   drawBeers();
   drawWaters();
-  drawBird();
+  drawPlayer();
   drawHitboxes();
   drawFps(now);
   drawScoreOnCanvas(now);
@@ -762,8 +973,8 @@ function flap() {
 
   if (!gameRunning || !dbAvailable) return;
 
-  bird.velocity = jumpStrength;
-  bird.rotation = -0.45;
+  player.velocity = jumpStrength;
+  player.rotation = -0.45;
 }
 
 function handleGameInput() {
@@ -774,9 +985,10 @@ async function checkIfUsernameExists(name) {
   if (!dbAvailable) return false;
 
   const cleanName = sanitizeUsername(name);
+  const requestId = ++usernameCheckRequestId;
 
   if (!cleanName) {
-    usernameWarning.textContent = "";
+    clearUsernameWarning();
     lastCheckedUsername = "";
     lastUsernameExists = false;
     return false;
@@ -788,9 +1000,13 @@ async function checkIfUsernameExists(name) {
     .eq("username", cleanName)
     .maybeSingle();
 
+  if (requestId !== usernameCheckRequestId) {
+    return lastUsernameExists;
+  }
+
   if (error) {
     console.error(error);
-    usernameWarning.textContent = "";
+    clearUsernameWarning();
     lastCheckedUsername = cleanName;
     lastUsernameExists = false;
     return false;
@@ -801,13 +1017,15 @@ async function checkIfUsernameExists(name) {
   lastUsernameExists = exists;
 
   if (exists) {
-    usernameWarning.textContent = "Existiert scho. Wenn du dä Name bruchsch, spielsch mitenem bestehende Benutzer und de Highscore wird binenem bessere Resultat überschriebe.";
-    usernameWarning.classList.remove("is-info");
-    usernameWarning.classList.add("is-warning");
+    setUsernameWarningState(
+      "Dä Name gids scho. Du chasch diräkt wiiterspiele und bineme bessere Resultat wird din Highscore aktualisiert.",
+      "warning"
+    );
   } else {
-    usernameWarning.textContent = "Name isch no frei. Mit dem Name wird en neue Benutzer erstellt.";
-    usernameWarning.classList.remove("is-warning");
-    usernameWarning.classList.add("is-info");
+    setUsernameWarningState(
+      "Name isch no frei. Mit dem Name wird en neue Benutzer erstellt.",
+      "info"
+    );
   }
 
   return exists;
@@ -816,6 +1034,7 @@ async function checkIfUsernameExists(name) {
 async function startGame() {
   if (!dbAvailable) return;
 
+  clearTimeout(usernameCheckTimer);
   username = sanitizeUsername(usernameInput.value);
 
   if (!username) {
@@ -827,11 +1046,10 @@ async function startGame() {
     await checkIfUsernameExists(username);
   }
 
-  localStorage.setItem("flappy_username", username);
+  localStorage.setItem(USERNAME_STORAGE_KEY, username);
   playerLabel.textContent = `Spieler: ${username}`;
 
-  cancelAnimationFrame(animationId);
-
+  stopGameLoop();
   initGame();
   showScreen(gameScreen);
 
@@ -857,13 +1075,18 @@ function beginGameplay() {
   lastPipeTime = now;
   gameStartTime = now;
 
-  bird.velocity = jumpStrength;
-  bird.rotation = -0.45;
+  player.velocity = jumpStrength;
+  player.rotation = -0.45;
 
   animationId = requestAnimationFrame(updateGame);
 }
 
 function getRankText(points) {
+  if (points >= 300) return "";
+  if (points >= 280) return "Absolut wahnsinnig. Du hesch s'Biersammle uf es Niveau bracht, wo jede Logistikplan verblasse lad.";
+  if (points >= 260) return "Komplett eskaliert. Das isch nümme nur guet, das isch praktisch historischi Bierdominanz.";
+  if (points >= 240) return "Unfassbar starch. Du flügsch dur dä Parcour, als wär er extra für dich baut worde.";
+  if (points >= 220) return "Brutal präzise. So viel Kontrolle het me susch nume bi Lüüt mit innerem Bierkompass.";
   if (points >= 200) return "";
   if (points >= 180) return "Vollmaschine. Du bisch wahrschinlich sälber scho es halbs Bierlogistik-Team.";
   if (points >= 160) return "Königsklass. Wenn öpper Vorrat organisiere cha, denn du.";
@@ -877,41 +1100,67 @@ function getRankText(points) {
   return "Du hesch praktisch nüt organisiert. So wird de Schmudo e Trochestund.";
 }
 
-async function saveHighscore(currentUsername, newScore) {
-  if (!dbAvailable) return;
-
-  const { data: existing, error: fetchError } = await supabaseClient
+async function getExistingHighscore(currentUsername) {
+  const { data, error } = await supabaseClient
     .from("scores")
     .select("username, highscore")
     .eq("username", currentUsername)
     .maybeSingle();
 
-  if (fetchError) throw fetchError;
+  if (error) throw error;
+  return data || null;
+}
 
-  if (!existing) {
-    const { error: insertError } = await supabaseClient
+async function upsertHighscore(currentUsername, newScore, existingEntry) {
+  const timestamp = new Date().toISOString();
+
+  if (!existingEntry) {
+    const { error } = await supabaseClient
       .from("scores")
       .insert({
         username: currentUsername,
         highscore: newScore,
-        updated_at: new Date().toISOString()
+        updated_at: timestamp
       });
 
-    if (insertError) throw insertError;
+    if (error) throw error;
     return;
   }
 
-  if (newScore > existing.highscore) {
-    const { error: updateError } = await supabaseClient
-      .from("scores")
-      .update({
-        highscore: newScore,
-        updated_at: new Date().toISOString()
-      })
-      .eq("username", currentUsername);
+  const { error } = await supabaseClient
+    .from("scores")
+    .update({
+      highscore: newScore,
+      updated_at: timestamp
+    })
+    .eq("username", currentUsername);
 
-    if (updateError) throw updateError;
-  }
+  if (error) throw error;
+}
+
+async function getLeaderboardData() {
+  const { data, error } = await supabaseClient
+    .from("scores")
+    .select("username, highscore, updated_at")
+    .order("highscore", { ascending: false })
+    .order("updated_at", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+}
+
+function getRankForScore(entries, runUsername, runScore, excludeOwnEntry = false) {
+  const currentScore = Number(runScore);
+
+  const relevantEntries = excludeOwnEntry
+    ? entries.filter(entry => entry.username !== runUsername)
+    : entries;
+
+  const entriesAhead = relevantEntries.filter(entry => {
+    return Number(entry.highscore) >= currentScore;
+  }).length;
+
+  return entriesAhead + 1;
 }
 
 async function endGame() {
@@ -921,71 +1170,142 @@ async function endGame() {
   waitingForFirstInput = false;
   updateStartOverlay();
   resetPerformanceMonitor();
-  cancelAnimationFrame(animationId);
+  stopGameLoop();
 
   finalScore.textContent = `Du hesch ${score} Bier gsammlet.`;
   rankText.textContent = getRankText(score);
 
-  if (score >= 200) {
-    endTitle.textContent = "LEGENDÄR";
-    legendBox.classList.remove("hidden");
+  goldBox.classList.add("hidden");
+  platinumBox.classList.add("hidden");
+  placementText.textContent = "";
+  highscoreStatusText.textContent = "";
+  highscoreStatusText.classList.remove("is-success", "is-muted");
+
+  if (score >= 300) {
+    platinumBox.classList.remove("hidden");
+  } else if (score >= 200) {
+    goldBox.classList.remove("hidden");
   }
 
   showScreen(endScreen);
   showResultView();
 
   try {
-    await saveHighscore(username, score);
+    const existingEntry = await getExistingHighscore(username);
+    const isNewHighscore = !existingEntry || score > existingEntry.highscore;
+
+    if (isNewHighscore) {
+      await upsertHighscore(username, score, existingEntry);
+    }
+
+    const leaderboardData = await getLeaderboardData();
+
+    const placement = isNewHighscore
+      ? getRankForScore(leaderboardData, username, score, true)
+      : getRankForScore(leaderboardData, username, score, false);
+
+    placementText.textContent = `${placement}. Platz`;
+
+    if (isNewHighscore) {
+      highscoreStatusText.textContent = "Neuer Highscore";
+      highscoreStatusText.classList.add("is-success");
+    } else {
+      highscoreStatusText.textContent = "Kein Highscore";
+      highscoreStatusText.classList.add("is-muted");
+    }
   } catch (error) {
     console.error(error);
+    placementText.textContent = "Dini Platzierig chan grad nid berächnet wärde.";
+    highscoreStatusText.textContent = "Highscore-Status aktuell nid verfüegbar.";
+    highscoreStatusText.classList.add("is-muted");
   }
 }
 
-async function loadLeaderboard() {
-  if (!dbAvailable) return;
-
-  leaderboardList.innerHTML = "<li>Lade Top 30...</li>";
-  saveStatus.textContent = "Lade Highscore...";
-
-  const { data, error } = await supabaseClient
-    .from("scores")
-    .select("username, highscore, updated_at")
-    .order("highscore", { ascending: false })
-    .order("updated_at", { ascending: true })
-    .limit(30);
-
-  if (error) {
-    console.error(error);
-    leaderboardList.innerHTML = "<li>Leaderboard konnte nicht geladen werden.</li>";
-    saveStatus.textContent = "Fehler bim Lade.";
-    return;
-  }
-
-  if (!data || data.length === 0) {
+function renderLeaderboardEntries(entries) {
+  if (!entries || entries.length === 0) {
     leaderboardList.innerHTML = "<li>No kei Bierjäger i de Liste.</li>";
     saveStatus.textContent = "No kei Iträg.";
     return;
   }
 
-  leaderboardList.innerHTML = data
-    .map(entry => `<li><strong>${escapeHtml(entry.username)}</strong> – ${entry.highscore} Bier</li>`)
+  const visibleEntries = leaderboardShowAll ? entries : entries.slice(0, 10);
+
+  leaderboardList.innerHTML = visibleEntries
+    .map(
+      entry =>
+        `<li><strong>${escapeHtml(entry.username)}</strong> – ${entry.highscore} Bier</li>`
+    )
     .join("");
 
+  leaderboardTitle.textContent = leaderboardShowAll
+    ? "Kompletti Bierjäger-Liste"
+    : "Top 10 Bierjäger";
+
+  toggleLeaderboardBtn.textContent = leaderboardShowAll
+    ? "Nur Top 10"
+    : "Komplette Liste";
+
+  toggleLeaderboardBtn.classList.toggle("hidden", entries.length <= 10);
   saveStatus.textContent = "";
+}
+
+async function loadLeaderboard() {
+  if (!dbAvailable) return;
+
+  leaderboardList.innerHTML = leaderboardShowAll
+    ? "<li>Lade kompletti Liste...</li>"
+    : "<li>Lade Top 10...</li>";
+
+  saveStatus.textContent = "Lade Highscore...";
+
+  try {
+    const data = await getLeaderboardData();
+    renderLeaderboardEntries(data);
+  } catch (error) {
+    console.error(error);
+    leaderboardList.innerHTML = "<li>Leaderboard konnte nicht geladen werden.</li>";
+    saveStatus.textContent = "Fehler bim Lade.";
+  }
+}
+
+function updateMovingItems(items, movement, bobSpeed) {
+  for (let i = items.length - 1; i >= 0; i--) {
+    const item = items[i];
+    item.x -= movement;
+    item.bob += bobSpeed;
+
+    if (item.x + item.width <= offscreenRemovalX) {
+      items.splice(i, 1);
+    }
+  }
+}
+
+function updatePipes(movement) {
+  for (let i = pipes.length - 1; i >= 0; i--) {
+    const pipe = pipes[i];
+    pipe.x -= movement;
+
+    if (pipe.x + pipeWidth <= offscreenRemovalX) {
+      pipes.splice(i, 1);
+    }
+  }
 }
 
 function updateGame(currentTime) {
   if (!gameRunning || !dbAvailable) return;
 
-  if (!lastFrameTime) lastFrameTime = currentTime;
+  if (!lastFrameTime) {
+    lastFrameTime = currentTime;
+  }
+
   const delta = Math.min(1.5, (currentTime - lastFrameTime) / 16.6667);
   lastFrameTime = currentTime;
 
   updateDifficultyCache(currentTime);
 
-  bird.velocity += gravity * delta;
-  bird.y += bird.velocity * delta;
-  bird.rotation = clamp(bird.velocity * 0.05, -0.45, Math.PI / 4);
+  player.velocity += gravity * delta;
+  player.y += player.velocity * delta;
+  player.rotation = clamp(player.velocity * 0.05, -0.45, Math.PI / 4);
 
   if (currentTime - lastPipeTime > cachedPipeInterval) {
     createPipe();
@@ -994,35 +1314,16 @@ function updateGame(currentTime) {
 
   const movement = cachedPipeSpeed * delta;
 
-  for (let i = pipes.length - 1; i >= 0; i--) {
-    const pipe = pipes[i];
-    pipe.x -= movement;
+  updatePipes(movement);
+  updateMovingItems(beers, movement, beerBobSpeed * delta);
+  updateMovingItems(waters, movement, waterBobSpeed * delta);
 
-    if (pipe.x + pipeWidth <= -20) pipes.splice(i, 1);
-  }
+  const playerBox = getPlayerBox();
 
-  for (let i = beers.length - 1; i >= 0; i--) {
-    const beer = beers[i];
-    beer.x -= movement;
-    beer.bob += beerBobSpeed * delta;
+  checkItemCollection(beers, pickupPoints, "green", currentTime, playerBox, false);
+  checkItemCollection(waters, -1, "red", currentTime, playerBox, true);
 
-    if (beer.x + beer.width <= -20) beers.splice(i, 1);
-  }
-
-  for (let i = waters.length - 1; i >= 0; i--) {
-    const water = waters[i];
-    water.x -= movement;
-    water.bob += waterBobSpeed * delta;
-
-    if (water.x + water.width <= -20) waters.splice(i, 1);
-  }
-
-  const birdBox = getBirdBox();
-
-  checkItemCollection(beers, pickupPoints, "green", currentTime, birdBox, false);
-  checkItemCollection(waters, -1, "red", currentTime, birdBox, true);
-
-  if (checkCollision(birdBox)) {
+  if (checkCollision(playerBox)) {
     endGame();
     return;
   }
@@ -1032,11 +1333,38 @@ function updateGame(currentTime) {
   animationId = requestAnimationFrame(updateGame);
 }
 
+async function openLeaderboardScreen() {
+  if (!dbAvailable) return;
+  leaderboardShowAll = false;
+  showScreen(endScreen);
+  showLeaderboardView();
+  await loadLeaderboard();
+}
+
+async function toggleLeaderboardMode() {
+  leaderboardShowAll = !leaderboardShowAll;
+  await loadLeaderboard();
+}
+
+function bindClick(element, handler) {
+  element.addEventListener("click", handler);
+}
+
 // Events
 window.addEventListener("resize", resizeCanvas);
 
-startBtn.addEventListener("click", startGame);
-restartBtn.addEventListener("click", startGame);
+bindClick(startBtn, startGame);
+bindClick(restartBtn, startGame);
+
+bindClick(helpBtn, () => showScreen(helpScreen));
+bindClick(backToStartBtn, goToStartScreen);
+
+bindClick(privacyBtn, () => showScreen(privacyScreen));
+bindClick(impressumBtn, () => showScreen(impressumScreen));
+bindClick(privacyFromHelpBtn, () => showScreen(privacyScreen));
+bindClick(impressumFromHelpBtn, () => showScreen(impressumScreen));
+bindClick(backFromPrivacyBtn, goToStartScreen);
+bindClick(backFromImpressumBtn, goToStartScreen);
 
 usernameInput.addEventListener("input", () => {
   if (!dbAvailable) return;
@@ -1044,7 +1372,7 @@ usernameInput.addEventListener("input", () => {
   const cleanName = sanitizeUsername(usernameInput.value);
 
   if (!cleanName) {
-    usernameWarning.textContent = "";
+    clearUsernameWarning();
     lastCheckedUsername = "";
     lastUsernameExists = false;
     clearTimeout(usernameCheckTimer);
@@ -1054,58 +1382,59 @@ usernameInput.addEventListener("input", () => {
   clearTimeout(usernameCheckTimer);
   usernameCheckTimer = setTimeout(() => {
     checkIfUsernameExists(cleanName);
-  }, 350);
+  }, USERNAME_CHECK_DELAY);
 });
 
 usernameInput.addEventListener("keydown", event => {
-  if (event.key === "Enter") startGame();
+  if (event.key === "Enter") {
+    startGame();
+  }
 });
 
-showLeaderboardBtn.addEventListener("click", async () => {
-  if (!dbAvailable) return;
-  showLeaderboardView();
-  await loadLeaderboard();
-});
-
-miniInfo.addEventListener("click", async () => {
-  if (!dbAvailable) return;
-  showScreen(endScreen);
-  showLeaderboardView();
-  await loadLeaderboard();
-});
+showLeaderboardBtn.addEventListener("click", openLeaderboardScreen);
+miniInfo.addEventListener("click", openLeaderboardScreen);
+toggleLeaderboardBtn.addEventListener("click", toggleLeaderboardMode);
 
 changeUserBtn.addEventListener("click", () => {
   if (!dbAvailable) return;
-  showScreen(startScreen);
-  showResultView();
+  goToStartScreen();
   usernameInput.value = username;
-  usernameWarning.textContent = "";
+  clearUsernameWarning();
   resetPerformanceMonitor();
 });
 
 window.addEventListener("keydown", event => {
   const key = event.key.toLowerCase();
 
-  if (key === "h") showHitboxes = !showHitboxes;
+  if (key === "h") {
+    showHitboxes = !showHitboxes;
+  }
 
   if (key === "f") {
     showFps = !showFps;
     if (showFps) {
-      fps = 0;
-      fpsFrameCount = 0;
-      fpsLastTime = 0;
+      resetFpsCounter();
     }
   }
 
   if (event.code === "Space") {
     event.preventDefault();
-    if (gameScreen.classList.contains("active")) handleGameInput();
+    if (gameScreen.classList.contains("active")) {
+      handleGameInput();
+    }
+  }
+
+  if (
+    event.key === "Escape" &&
+    (helpScreen.classList.contains("active") ||
+      privacyScreen.classList.contains("active") ||
+      impressumScreen.classList.contains("active"))
+  ) {
+    goToStartScreen();
   }
 });
 
-canvas.addEventListener("mousedown", () => {
-  handleGameInput();
-});
+canvas.addEventListener("mousedown", handleGameInput);
 
 canvas.addEventListener(
   "touchstart",
