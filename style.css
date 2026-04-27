@@ -938,6 +938,8 @@ button.secondary {
   .rank-text-big   { font-size: 16px; }
   .result-meta     { font-size: 15px; }
 
+  .hero-badge { width: fit-content; margin: 0 0 14px; }
+
   .row { gap: 8px; }
   .row button { flex: 1 1 100%; }
 
