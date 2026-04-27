@@ -5,29 +5,38 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Schärbäli uf Bierjagd</title>
   <link rel="stylesheet" href="style.css" />
+
+  <link rel="icon" type="image/svg+xml" href="images/logo.svg">
+  <link rel="apple-touch-icon" href="images/logo.svg">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="application-name" content="Bierjagd">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Bierjagd">
 </head>
 <body>
   <div class="app">
+
+    <!-- Offline -->
     <div id="offlineScreen" class="screen offline-screen">
       <div class="offline-card">
         <div class="offline-icon">⚠️</div>
         <h2>Spiel zurzeit nicht erreichbar</h2>
-        <p>
-          Bitte versuche es später nochmals.<br />
-          Der Webmaster wurde bereits benachrichtigt.
-        </p>
+        <p>Bitte versuche es später nochmals.<br />Der Webmaster wurde bereits benachrichtigt.</p>
       </div>
     </div>
 
+    <!-- Start -->
     <div id="startScreen" class="screen active">
       <button id="helpBtn" class="help-btn" type="button" aria-label="Spielerklärung öffnen">?</button>
+      <button id="settingsBtn" class="settings-btn" type="button" aria-label="Einstellungen öffnen">⚙️</button>
 
       <a href="https://www.schaerbaehufae.ch/" class="hero-badge" target="_blank" rel="noopener noreferrer">Gugge Schärbähufä Hergiswil</a>
       <img class="logo-large" src="images/logo.svg" alt="Schärbäli Logo" decoding="async" />
 
       <h1>Schärbäli uf Bierjagd</h1>
       <p class="intro">
-        S’Schärbäli muess gnueg Vorrat für de Schmudo organisiere.
+        S'Schärbäli muess gnueg Vorrat für de Schmudo organisiere.
         Schnapp dier so viel 3er-Bierpäckli wie möglich, wiich de Hindernis us
         und pass uf: Wasserfläsche gäbed dir Minuspünkt.
       </p>
@@ -47,66 +56,34 @@
         <button id="impressumBtn" class="text-link-btn" type="button">Impressum</button>
       </div>
 
-      <a href="https://github.com/webmaster-shh/schaerbaeli-auf-bierjagd/releases" class="version-label" target="_blank">v1.0.0-release</a>
+      <a href="https://github.com/webmaster-shh/schaerbaeli-auf-bierjagd/releases" class="version-label" target="_blank">v1.1.0</a>
     </div>
 
+    <!-- Help -->
     <div id="helpScreen" class="screen">
       <div class="help-header">
         <button id="backToStartBtn" class="secondary back-btn" type="button">←&nbsp;&nbsp;Zurück</button>
       </div>
-
       <h2>Spielerklärung</h2>
-
       <div class="help-content">
-        <p>
-          I dem Spiel stüürsch du s’Schärbäli dur en Hindernisparcours und sammlisch
-          so viel Bier wie möglich.
-        </p>
-
+        <p>I dem Spiel stüürsch du s'Schärbäli dur en Hindernisparcours und sammlisch so viel Bier wie möglich.</p>
         <h3>Ziel vom Spiel</h3>
-        <p>
-          Sammel möglichst viel Bier, ohni i es Hindernis ine z’flüge. Je meh Bier du
-          sammlisch, desto besser wird dis Resultat.
-        </p>
-
+        <p>Sammel möglichst viel Bier, ohni i es Hindernis ine z'flüge. Je meh Bier du sammlisch, desto besser wird dis Resultat.</p>
         <h3>Steuerung</h3>
-        <p>
-          Du chasch s’Spiel mit Klick, Touch oder mit de Läärtaste starte und spiele.
-          Jede Klick lad s’Schärbäli gäg ufe flüge.
-        </p>
-
-        <h3>So funktioniert s’Spiel</h3>
-        <p>
-          Nach em Start warted s’Spiel uf din erschti Klick. Ab denn flügt s’Schärbäli
-          los und gheid dur d’Schwärkraft immer wieder nach abe. Du muesch also im
-          richtige Momänt tippe, damit du i de Luft bliibsch.
-        </p>
-
+        <p>Du chasch s'Spiel mit Klick, Touch oder mit de Läärtaste starte und spiele. Jede Klick lad s'Schärbäli gäg ufe flüge.</p>
+        <h3>So funktioniert s'Spiel</h3>
+        <p>Nach em Start warted s'Spiel uf din erschti Klick. Ab denn flügt s'Schärbäli los und gheid dur d'Schwärkraft immer wieder nach abe. Du muesch also im richtige Momänt tippe, damit du i de Luft bliibsch.</p>
         <h3>Punkte</h3>
-        <p>
-          Wenn du es Bierpäckli iisammlisch, bechunsch du <strong>3 Pünkt</strong>.
-          Wenn du e Wasserfläsche iisammlisch, verlürsch du <strong>1 Punkt</strong>.
-        </p>
-
+        <p>Wenn du es Bierpäckli iisammlisch, bechunsch du <strong>3 Pünkt</strong>. Wenn du e Wasserfläsche iisammlisch, verlürsch du <strong>1 Punkt</strong>.</p>
         <h3>Hindernisse</h3>
-        <p>
-          Du muesch zwüsche Pföschte und Verchehrsschilder dureflüge. Sobald du es
-          Hindernis berührsch oder obe bzw. unde useflügsch, isch s’Spiel verbii.
-        </p>
-
+        <p>Du muesch zwüsche Pföschte und Verchehrsschilder dureflüge. Sobald du es Hindernis berührsch oder obe bzw. unde useflügsch, isch s'Spiel verbii.</p>
         <h3>Schwierigkeit</h3>
-        <p>
-          Mit de Ziit und mit höchere Punktzahl wird s’Spiel schwieriger: d’Hindernis
-          chömed schneller und d’Abständ wärded chli änger.
-        </p>
-
+        <p>Mit de Ziit und mit höchere Punktzahl wird s'Spiel schwieriger: d'Hindernis chömed schneller und d'Abständ wärded chli änger.</p>
         <h3>Highscore</h3>
-        <p>
-          Din Name wird gspeicheret. Wenn dä Name scho existiert und du es bessers
-          Resultat machsch, wird din Highscore aktualisiert.
-        </p>
+        <p>Din Name wird gspeicheret. Wenn dä Name scho existiert und du es bessers Resultat machsch, wird din Highscore aktualisiert.</p>
+        <h3>Skins</h3>
+        <p>Skins wärded dür Achievments freigschaltet — wenn irgendein Spieler es Ziel erreicht, isch de Skin für alli verfüegbar. Im Skin-Menü chasch din aktuelle Look uswähle.</p>
       </div>
-
       <div class="legal-links legal-links-spaced">
         <button id="privacyFromHelpBtn" class="text-link-btn" type="button">Datenschutz</button>
         <span class="legal-separator">•</span>
@@ -114,161 +91,135 @@
       </div>
     </div>
 
+    <!-- Settings -->
+    <div id="settingsScreen" class="screen">
+      <div class="help-header">
+        <button id="backFromSettingsBtn" class="secondary back-btn" type="button">←&nbsp;&nbsp;Zurück</button>
+      </div>
+      <h2>Einstellungen</h2>
+      <div class="settings-content">
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Hitbox Anzeige</span>
+            <span class="setting-desc">Zeigt de Kollisionsbereich ah</span>
+          </div>
+          <button class="toggle-btn" id="hitboxToggle" type="button" role="switch" aria-checked="false">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">FPS Anzeige</span>
+            <span class="setting-desc">Zeigt die aktuell Bildrate ah</span>
+          </div>
+          <button class="toggle-btn" id="fpsToggle" type="button" role="switch" aria-checked="false">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+      </div>
+
+      <h2 style="margin-top: 24px;">Skins</h2>
+      <p class="settings-sub">Skins wärded dur Achievements für alli freigschaltet.</p>
+      <div id="skinGrid" class="skin-grid"></div>
+    </div>
+
+    <!-- Privacy -->
     <div id="privacyScreen" class="screen">
       <div class="help-header">
         <button id="backFromPrivacyBtn" class="secondary back-btn" type="button">←&nbsp;&nbsp;Zurück</button>
       </div>
-
       <h2>Datenschutz</h2>
-
       <div class="help-content legal-content">
         <h3>Allgemein</h3>
-        <p>
-          Dies ist ein kleines Spassprojekt. Es werden nur die Daten verarbeitet, die für das
-          Spiel und die Highscore-Liste notwendig sind.
-        </p>
-
+        <p>Dies ist ein kleines Spassprojekt. Es werden nur die Daten verarbeitet, die für das Spiel und die Highscore-Liste notwendig sind.</p>
         <h3>Welche Daten verarbeitet werden</h3>
-        <p>
-          Wenn du spielst, wird dein Benutzername lokal im Browser gespeichert, damit du ihn
-          nicht bei jedem Besuch erneut eingeben musst.
-        </p>
-        <p>
-          Zusätzlich wird dein Benutzername zusammen mit deinem Highscore in der Datenbank
-          gespeichert, damit die Rangliste funktioniert und bestehende Spielernamen erkannt
-          werden können.
-        </p>
-
+        <p>Wenn du spielst, wird dein Benutzername lokal im Browser gespeichert, damit du ihn nicht bei jedem Besuch erneut eingeben musst.</p>
+        <p>Zusätzlich wird dein Benutzername zusammen mit deinem Highscore in der Datenbank gespeichert, damit die Rangliste funktioniert und bestehende Spielernamen erkannt werden können.</p>
         <h3>Zweck</h3>
-        <p>
-          Die Daten werden ausschliesslich für das Spiel, die Anzeige der Highscores und die
-          Aktualisierung deines Ergebnisses verwendet.
-        </p>
-
+        <p>Die Daten werden ausschliesslich für das Spiel, die Anzeige der Highscores und die Aktualisierung deines Ergebnisses verwendet.</p>
         <h3>Weitergabe von Daten</h3>
-        <p>
-          Es findet keine bewusste Weitergabe an Dritte statt, ausser an technisch notwendige
-          Dienste für Hosting und Datenbank.
-        </p>
-
+        <p>Es findet keine bewusste Weitergabe an Dritte statt, ausser an technisch notwendige Dienste für Hosting und Datenbank.</p>
         <h3>Deine Rechte</h3>
-        <p>
-          Du kannst jederzeit eine Auskunft oder die Löschung deiner Daten verlangen. Bitte
-          melde dich dafür per E-Mail.
-        </p>
-
+        <p>Du kannst jederzeit eine Auskunft oder die Löschung deiner Daten verlangen. Bitte melde dich dafür per E-Mail.</p>
         <h3>Kontakt / verantwortliche Stelle</h3>
-        <p>
-          Verantwortlich für diese Spielseite:<br />
-          <strong>Gugge Schärbähufä Hergiswil</strong><br />
-          <strong>E-Mail: webmaster@schaerbaehufae.ch</strong>
-        </p>
-
+        <p><strong>Gugge Schärbähufä Hergiswil</strong><br /><strong>E-Mail: webmaster@schaerbaehufae.ch</strong></p>
         <h3>Hinweis</h3>
-        <p>
-          Dies ist ein kleines Hobby- und Spassprojekt und keine kommerzielle Plattform.
-        </p>
+        <p>Dies ist ein kleines Hobby- und Spassprojekt und keine kommerzielle Plattform.</p>
       </div>
     </div>
 
+    <!-- Impressum -->
     <div id="impressumScreen" class="screen">
       <div class="help-header">
         <button id="backFromImpressumBtn" class="secondary back-btn" type="button">←&nbsp;&nbsp;Zurück</button>
       </div>
-
       <h2>Impressum</h2>
-
       <div class="help-content legal-content">
         <h3>Angaben</h3>
-        <p>
-          <strong>Gugge Schärbähufä Hergiswil</strong>
-        </p>
-
+        <p><strong>Gugge Schärbähufä Hergiswil</strong></p>
         <h3>Kontakt</h3>
-        <p>
-          E-Mail: <strong>webmaster@schaerbaehufae.ch</strong><br />
-          Website: <strong>www.schaerbaehufae.ch</strong>
-        </p>
-
+        <p>E-Mail: <strong>webmaster@schaerbaehufae.ch</strong><br />Website: <strong>www.schaerbaehufae.ch</strong></p>
         <h3>Zum Projekt</h3>
-        <p>
-          Bei dieser Spielseite handelt es sich um ein kleines, nicht kommerzielles
-          Spassprojekt.
-        </p>
-
+        <p>Bei dieser Spielseite handelt es sich um ein kleines, nicht kommerzielles Spassprojekt.</p>
         <h3>Haftungsausschluss</h3>
-        <p>
-          Trotz sorgfältiger Pflege der Inhalte wird keine Gewähr für Aktualität, Richtigkeit
-          und Vollständigkeit übernommen.
-        </p>
-
+        <p>Trotz sorgfältiger Pflege der Inhalte wird keine Gewähr für Aktualität, Richtigkeit und Vollständigkeit übernommen.</p>
         <h3>Urheberrecht</h3>
-        <p>
-          Inhalte, Grafiken und Code dieser Seite sind – soweit nicht anders vermerkt – Teil
-          dieses Projekts. Bitte übernimm oder verwende sie nicht ohne vorherige Erlaubnis.
-        </p>
+        <p>Inhalte, Grafiken und Code dieser Seite sind – soweit nicht anders vermerkt – Teil dieses Projekts. Bitte übernimm oder verwende sie nicht ohne vorherige Erlaubnis.</p>
       </div>
     </div>
 
+    <!-- Game -->
     <div id="gameScreen" class="screen">
       <div class="hud">
         <span id="playerLabel">Spieler: -</span>
         <span id="scoreLabel">Bier: 0</span>
       </div>
-
       <div class="canvas-shell">
         <div class="canvas-stage">
           <canvas id="gameCanvas" width="400" height="700"></canvas>
-
           <div id="startOverlay" class="start-overlay hidden">
-            <div class="start-overlay-card">
-              Klick, Touch oder Läärtaste zum Startä
-            </div>
+            <div class="start-overlay-card">Klick, Touch oder Läärtaste zum Startä</div>
           </div>
         </div>
       </div>
-
       <div id="performanceWarning" class="performance-warning hidden">
         S'Spiel lauft aktuell mit reduzierter Bildrate. Möglicherwiis isch de Stromsparmodus aktiv.
       </div>
     </div>
 
+    <!-- End -->
     <div id="endScreen" class="screen">
       <div id="resultView" class="result-view">
         <div class="result-card">
           <div class="result-badge">Game Over</div>
-
           <p class="final-score-big" id="finalScore">Du hesch 0 Bier gsammlet.</p>
-
           <div class="result-stats">
             <div class="result-stat">
               <span class="result-stat-label">Platzierig</span>
               <p class="result-meta" id="placementText"></p>
             </div>
-
             <div class="result-stat">
               <span class="result-stat-label">Highscore-Status</span>
               <p class="result-meta" id="highscoreStatusText"></p>
             </div>
           </div>
-
           <p class="rank-text-big" id="rankText"></p>
         </div>
 
         <div id="goldBox" class="gold-box hidden">
           <div class="gold-title">DU BISCH LEGENDÄR</div>
-          <div class="gold-subtitle">
-            Das isch kei normali Sammelrundi gsi. Das isch es Meisterwerk vo
-            Durstvorsorg, Eskalationsplanig und absoluter Grössi.
-          </div>
+          <div class="gold-subtitle">Das isch kei normali Sammelrundi gsi. Das isch es Meisterwerk vo Durstvorsorg, Eskalationsplanig und absoluter Grössi.</div>
         </div>
-
         <div id="platinumBox" class="platinum-box hidden">
           <div class="platinum-title">PLATIN-LEGÄNDE</div>
-          <div class="platinum-subtitle">
-            Das isch nümme nume legendär. Das isch d’Endstufe vo Bierlogistik,
-            Flugpräzision und völliger Eskalationskompetänz.
-          </div>
+          <div class="platinum-subtitle">Das isch nümme nume legendär. Das isch d'Endstufe vo Bierlogistik, Flugpräzision und völliger Eskalationskompetänz.</div>
+        </div>
+
+        <!-- Newly unlocked achievement -->
+        <div id="newAchievementBox" class="achievement-unlock hidden">
+          <div class="achievement-unlock-title">🏅 Neuer Skin freigschaltet!</div>
+          <div class="achievement-unlock-name" id="newAchievementName"></div>
+          <div class="achievement-unlock-unlocker" id="newAchievementUnlocker"></div>
         </div>
 
         <div class="row">
@@ -279,18 +230,24 @@
 
       <div id="leaderboardView" class="leaderboard-view hidden">
         <h2 id="leaderboardTitle">Top 10 Bierjäger</h2>
-        <p class="center" id="saveStatus">Lade Highscore...</p>
 
+        <!-- Tab switcher -->
+        <div class="lb-tabs">
+          <button class="lb-tab active" id="tabAllTime" type="button">Gesamt</button>
+          <button class="lb-tab" id="tabToday" type="button">Hüt</button>
+        </div>
+
+        <p class="center" id="saveStatus">Lade Highscore...</p>
         <div class="leaderboard">
           <ol id="leaderboardList"></ol>
         </div>
-
         <div class="row">
           <button id="toggleLeaderboardBtn" class="secondary" type="button">Komplette Liste</button>
           <button id="changeUserBtn" class="secondary" type="button">Zrugg zur Startsiite</button>
         </div>
       </div>
     </div>
+
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
