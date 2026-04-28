@@ -706,7 +706,7 @@ function getRandomWaterSpawnCount(level) {
 }
 
 function updateDifficultyCache(t) {
-  const newLevel = Math.floor(score / 28);
+  const newLevel = Math.max(Math.floor((t - gameStartTime) / 16000), Math.floor(score / 28));
   if (newLevel === difficultyLevel) return;
   difficultyLevel    = newLevel;
   cachedPipeSpeed    = Math.min(4.9, basePipeSpeed    + difficultyLevel * 0.1);
@@ -862,25 +862,9 @@ function createPipe() {
     collisionWidth: isPlainPost ? plainPostWidth : signWidth
   };
   pipes.push(pipe);
-  
-  // Spawn-Chancen mit Difficulty:
-  // Bier: 80% → 70%
-  // Wasser: 15% → 25%
-  // Leere Rohre: Rest
-  const maxLevel = 10; // Level bei dem 70% Bier / 25% Wasser erreicht sind
-  const progress = Math.min(difficultyLevel / maxLevel, 1);
-  
-  const beerSpawnChance = 0.80 - (0.10 * progress);     // 80% → 70%
-  const waterSpawnChance = 0.15 + (0.10 * progress);   // 15% → 25%
-  
-  const rand = Math.random();
-  
-  if (rand < waterSpawnChance) {
-    createWaterForPipe(pipe);
-  } else if (rand < waterSpawnChance + beerSpawnChance) {
-    createBeerForPipe(pipe);
-  }
-  // else: nichts (leeres Rohr)
+  pipesUntilNextWater--;
+  if (pipesUntilNextWater <= 0) { createWaterForPipe(pipe); pipesUntilNextWater = getRandomWaterSpawnCount(difficultyLevel); return; }
+  if (Math.random() < Math.max(0.42, 0.82 - difficultyLevel * 0.03)) createBeerForPipe(pipe);
 }
 
 // ─── Draw ─────────────────────────────────────────────────────────────────────
