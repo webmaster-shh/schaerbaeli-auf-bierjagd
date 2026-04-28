@@ -184,10 +184,10 @@ const SKINS = [
     }
   },
   {
-    id: "rapid_50", name: "Super-Stern", src: "images/players/player_rapid.svg",
+    id: "rapid_40", name: "Super-Stern", src: "images/players/player_rapid.svg",
     achievement: {
-      id: "rapid_50", type: "rapid_rounds", count: 50, maxPauseSec: 30,
-      revealLabel: "50 Runde mit weniger als 30 Sek Pause"
+      id: "rapid_40", type: "rapid_rounds", count: 40, maxPauseSec: 120,
+      revealLabel: "40 Runde mit weniger als 2 Min Pause"
     }
   },
   {
@@ -582,7 +582,7 @@ async function checkAndUnlockAchievements(currentScore, gameEndTimestamp) {
 
   // Rapid rounds
   const timeSinceLastRun = (gameEndTimestamp - localAch.lastRunEndTime) / 1000;
-  if (localAch.lastRunEndTime > 0 && timeSinceLastRun < 30) {
+  if (localAch.lastRunEndTime > 0 && timeSinceLastRun < 120) {
     localAch.rapidRoundCount++;
   } else {
     localAch.rapidRoundCount = 1;
