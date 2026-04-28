@@ -93,35 +93,35 @@ const SKINS = [
     }
   },
   {
-    id: "daily_2000", name: "Fürabeglanz", src: "images/players/player_daily-2000.svg",
-    achievement: {
-      id: "daily_2000", type: "daily_sum", threshold: 2000,
-      revealLabel: "Tagessumme 2'000 Pünkt ah eim Tag"
-    }
-  },
-  {
-    id: "daily_5000", name: "Heissläufer", src: "images/players/player_daily-5000.svg",
-    achievement: {
-      id: "daily_5000", type: "daily_sum", threshold: 5000,
-      revealLabel: "Tagessumme 5'000 Pünkt ah eim Tag"
-    }
-  },
-  {
-    id: "daily_10000", name: "Zackmeister", src: "images/players/player_daily-10000.svg",
+    id: "daily_10000", name: "Fürabeglanz", src: "images/players/player_daily-1.svg",
     achievement: {
       id: "daily_10000", type: "daily_sum", threshold: 10000,
       revealLabel: "Tagessumme 10'000 Pünkt ah eim Tag"
     }
   },
-    {
-    id: "daily_20000", name: "Abrissheld", src: "images/players/player_daily-20000.svg",
+  {
+    id: "daily_20000", name: "Heissläufer", src: "images/players/player_daily-2.svg",
     achievement: {
       id: "daily_20000", type: "daily_sum", threshold: 20000,
       revealLabel: "Tagessumme 20'000 Pünkt ah eim Tag"
     }
   },
   {
-    id: "daily_50000", name: "Eskalator", src: "images/players/player_daily-50000.svg",
+    id: "daily_30000", name: "Zackmeister", src: "images/players/player_daily-3.svg",
+    achievement: {
+      id: "daily_30000", type: "daily_sum", threshold: 30000,
+      revealLabel: "Tagessumme 30'000 Pünkt ah eim Tag"
+    }
+  },
+    {
+    id: "daily_40000", name: "Abrissheld", src: "images/players/player_daily-4.svg",
+    achievement: {
+      id: "daily_40000", type: "daily_sum", threshold: 40000,
+      revealLabel: "Tagessumme 40'000 Pünkt ah eim Tag"
+    }
+  },
+  {
+    id: "daily_50000", name: "Eskalator", src: "images/players/player_daily-5.svg",
     achievement: {
       id: "daily_50000", type: "daily_sum", threshold: 50000,
       revealLabel: "Tagessumme 50'000 Pünkt ah eim Tag"
