@@ -93,38 +93,38 @@ const SKINS = [
     }
   },
   {
-    id: "daily_20000", name: "Fürabeglanz", src: "images/players/player_daily-20000.svg",
+    id: "daily_2000", name: "Fürabeglanz", src: "images/players/player_daily-2000.svg",
+    achievement: {
+      id: "daily_2000", type: "daily_sum", threshold: 2000,
+      revealLabel: "Tagessumme 2'000 Pünkt ah eim Tag"
+    }
+  },
+  {
+    id: "daily_5000", name: "Heissläufer", src: "images/players/player_daily-5000.svg",
+    achievement: {
+      id: "daily_5000", type: "daily_sum", threshold: 5000,
+      revealLabel: "Tagessumme 5'000 Pünkt ah eim Tag"
+    }
+  },
+  {
+    id: "daily_10000", name: "Zackmeister", src: "images/players/player_daily-10000.svg",
+    achievement: {
+      id: "daily_10000", type: "daily_sum", threshold: 10000,
+      revealLabel: "Tagessumme 10'000 Pünkt ah eim Tag"
+    }
+  },
+    {
+    id: "daily_20000", name: "Abrissheld", src: "images/players/player_daily-20000.svg",
     achievement: {
       id: "daily_20000", type: "daily_sum", threshold: 20000,
       revealLabel: "Tagessumme 20'000 Pünkt ah eim Tag"
     }
   },
   {
-    id: "daily_50000", name: "Heissläufer", src: "images/players/player_daily-50000.svg",
+    id: "daily_50000", name: "Eskalator", src: "images/players/player_daily-50000.svg",
     achievement: {
       id: "daily_50000", type: "daily_sum", threshold: 50000,
       revealLabel: "Tagessumme 50'000 Pünkt ah eim Tag"
-    }
-  },
-  {
-    id: "daily_100000", name: "Zackmeister", src: "images/players/player_daily-100000.svg",
-    achievement: {
-      id: "daily_100000", type: "daily_sum", threshold: 100000,
-      revealLabel: "Tagessumme 100'000 Pünkt ah eim Tag"
-    }
-  },
-    {
-    id: "daily_200000", name: "Abrissheld", src: "images/players/player_daily-200000.svg",
-    achievement: {
-      id: "daily_200000", type: "daily_sum", threshold: 200000,
-      revealLabel: "Tagessumme 200'000 Pünkt ah eim Tag"
-    }
-  },
-  {
-    id: "daily_500000", name: "Eskalator", src: "images/players/player_daily-500000.svg",
-    achievement: {
-      id: "daily_500000", type: "daily_sum", threshold: 500000,
-      revealLabel: "Tagessumme 500'000 Pünkt ah eim Tag"
     }
   },
   {
