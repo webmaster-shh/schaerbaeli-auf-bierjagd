@@ -380,8 +380,14 @@ function circleIntersectsRect(cx, cy, r, rect) {
   return dx * dx + dy * dy < r * r;
 }
 
+function getNowInSwissTime() {
+  return new Date(new Date().toLocaleString('en-US', { timeZone: 'Europe/Zurich' }));
+}
+
 function todayStartISO() {
-  const d = new Date(); d.setHours(0,0,0,0); return d.toISOString();
+  const d = getNowInSwissTime();
+  d.setHours(0,0,0,0); 
+  return d.toISOString();
 }
 
 // ─── UI helpers ───────────────────────────────────────────────────────────────
@@ -565,10 +571,9 @@ async function tryInsertAchievement(achievementId, unlockedBy) {
 async function checkAndUnlockAchievements(currentScore, gameEndTimestamp) {
   if (!dbAvailable) return [];
 
-  const now     = new Date(gameEndTimestamp);
+  const now     = new Date(new Date(gameEndTimestamp).toLocaleString('en-US', { timeZone: 'Europe/Zurich' }));
   const hour    = now.getHours();
   const minute  = now.getMinutes();
-  const elapsed = (gameEndTimestamp - gameStartTimestamp) / 1000;
 
   // Update local counters
   if (currentScore === 0) {
@@ -772,7 +777,7 @@ async function upsertHighscore(u, s, existing) {
 
 async function saveDailyScore(u, s) {
   try {
-    await supabaseClient.from("daily_scores").insert({ username: u, score: s, played_at: new Date().toISOString() });
+    await supabaseClient.from("daily_scores").insert({ username: u, score: s, played_at: getNowInSwissTime().toISOString() });
   } catch(_) {}
 }
 
