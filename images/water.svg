@@ -1,83 +1,84 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 120" fill="none">
-  <defs>
-    <filter id="shadow" x="-20%" y="-20%" width="140%" height="160%">
-      <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#2b6cb0" flood-opacity="0.18"></feDropShadow>
-    </filter>
-
-    <linearGradient id="capBlue" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#67c8ff"></stop>
-      <stop offset="1" stop-color="#1c7ed6"></stop>
-    </linearGradient>
-
-    <linearGradient id="glassWater" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f7fdff"></stop>
-      <stop offset="0.25" stop-color="#dff4ff"></stop>
-      <stop offset="0.6" stop-color="#a8deff"></stop>
-      <stop offset="1" stop-color="#66bdf5"></stop>
-    </linearGradient>
-
-    <linearGradient id="glassWaterDark" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#d7f0ff"></stop>
-      <stop offset="1" stop-color="#4aa8ea"></stop>
-    </linearGradient>
-
-    <linearGradient id="labelBlue" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#2f84ff"></stop>
-      <stop offset="1" stop-color="#1f57c8"></stop>
-    </linearGradient>
-
-    <linearGradient id="labelScene" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f2fbff"></stop>
-      <stop offset="0.55" stop-color="#b8ecff"></stop>
-      <stop offset="1" stop-color="#7fd3ff"></stop>
-    </linearGradient>
-  </defs>
-
-  <g filter="url(#shadow)">
-    <g transform="translate(14 8)">
-      <rect x="20" y="0" width="14" height="10" rx="2.8" fill="url(#capBlue)" stroke="#165c99" stroke-width="1.5"></rect>
-      <path d="M19 4.5h16" stroke="#d9f3ff" stroke-width="1" opacity=".7"></path>
-
-      <path d="M18 10
-               C18 10 20 24 15 37
-               C10.5 48 9 56 9 71
-               V91
-               C9 97 14 102 20 102
-               H34
-               C40 102 45 97 45 91
-               V71
-               C45 56 43.5 48 39 37
-               C34 24 36 10 36 10Z" fill="url(#glassWater)" stroke="#3c8fcb" stroke-width="2.4"></path>
-
-      <path d="M21 14
-               C18.5 31 15 39 13 48" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round" opacity=".52"></path>
-
-      <rect x="13.5" y="31" width="27" height="12" rx="2.8" fill="url(#labelBlue)" stroke="#f7fbff" stroke-width="1.6"></rect>
-      <rect x="13" y="49" width="28" height="29" rx="3" fill="url(#labelScene)" stroke="#1c53b7" stroke-width="2"></rect>
-
-      <path d="M16 68
-               C20 64 24 66 28 62
-               C32 58 35 60 38 56
-               V70
-               H16Z" fill="#eaf9ff"></path>
-      <path d="M16 72
-               C20 69 24 71 28 67
-               C32 64 35 66 38 62" stroke="#52b7f5" stroke-width="2.4" stroke-linecap="round" fill="none"></path>
-      <path d="M16 76
-               C19.5 73.5 24 75.5 28 72
-               C32 69 35.5 70.5 38 68" stroke="#2f90df" stroke-width="2.2" stroke-linecap="round" fill="none" opacity=".9"></path>
-
-      <rect x="16" y="35" width="22" height="3.8" rx="1.9" fill="#f4fbff" opacity=".95"></rect>
-      <rect x="17" y="82" width="21" height="4" rx="2" fill="#2f6bd7" opacity=".9"></rect>
-
-      <ellipse cx="31" cy="25" rx="2.5" ry="3.5" fill="#ffffff" opacity=".55"></ellipse>
-      <ellipse cx="33" cy="47" rx="2.7" ry="3.2" fill="#ffffff" opacity=".4"></ellipse>
-      <ellipse cx="22" cy="63" rx="2.3" ry="2.8" fill="#ffffff" opacity=".34"></ellipse>
-      <ellipse cx="36" cy="86" rx="2.8" ry="3.3" fill="#dff6ff" opacity=".3"></ellipse>
-
-      <path d="M38 17
-               C39.5 25 40.5 31 40.5 40
-               V87" stroke="url(#glassWaterDark)" stroke-width="2" stroke-linecap="round" opacity=".45"></path>
-    </g>
-  </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 27.4.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 38.4 103.9" style="enable-background:new 0 0 38.4 103.9;" xml:space="preserve">
+<style type="text/css">
+	.st0{filter:url(#shadow);}
+	.st1{fill:url(#SVGID_1_);stroke:#165C99;stroke-width:1.5;}
+	.st2{opacity:0.7;fill:none;stroke:#D9F3FF;enable-background:new    ;}
+	.st3{fill:url(#SVGID_00000010271336715146345710000007605174648442122906_);stroke:#3C8FCB;stroke-width:2.4;}
+	.st4{opacity:0.52;fill:none;stroke:#FFFFFF;stroke-width:2.5;stroke-linecap:round;enable-background:new    ;}
+	.st5{fill:url(#SVGID_00000123442385902153443070000004680438811657372557_);stroke:#F7FBFF;stroke-width:1.6;}
+	.st6{fill:url(#SVGID_00000036958685602457083050000003308900438006819984_);stroke:#1C53B7;stroke-width:2;}
+	.st7{fill:#EAF9FF;}
+	.st8{fill:none;stroke:#52B7F5;stroke-width:2.4;stroke-linecap:round;}
+	.st9{opacity:0.9;fill:none;stroke:#2F90DF;stroke-width:2.2;stroke-linecap:round;enable-background:new    ;}
+	.st10{opacity:0.95;fill:#F4FBFF;enable-background:new    ;}
+	.st11{opacity:0.9;fill:#2F6BD7;enable-background:new    ;}
+	.st12{opacity:0.55;fill:#FFFFFF;enable-background:new    ;}
+	.st13{opacity:0.4;fill:#FFFFFF;enable-background:new    ;}
+	.st14{opacity:0.34;fill:#FFFFFF;enable-background:new    ;}
+	.st15{opacity:0.3;fill:#DFF6FF;enable-background:new    ;}
+	
+		.st16{opacity:0.45;fill:none;stroke:url(#SVGID_00000173128625720769644270000014721734708344418747_);stroke-width:2;stroke-linecap:round;enable-background:new    ;}
+</style>
+<filter  height="160%" id="shadow" width="140%" x="-20%" y="-20%">
+	<feDropShadow  dx="0" dy="4" flood-color="#2b6cb0" flood-opacity="0.18" stdDeviation="4"></feDropShadow>
+</filter>
+<g class="st0">
+	<g transform="translate(14 8)">
+		
+			<linearGradient id="SVGID_1_" gradientUnits="userSpaceOnUse" x1="-888.6572" y1="537.85" x2="-888.6572" y2="536.85" gradientTransform="matrix(14 0 0 -10 12446.4004 5371.25)">
+			<stop  offset="0" style="stop-color:#67C8FF"/>
+			<stop  offset="1" style="stop-color:#1C7ED6"/>
+		</linearGradient>
+		<path class="st1" d="M1-7.2h8.4c1.5,0,2.8,1.3,2.8,2.8v4.4c0,1.5-1.3,2.8-2.8,2.8H1c-1.5,0-2.8-1.3-2.8-2.8v-4.4
+			C-1.8-6-0.5-7.2,1-7.2z"/>
+		<path class="st2" d="M-2.8-2.8h16"/>
+		
+			<linearGradient id="SVGID_00000181048700322823302850000012438553721309405825_" gradientUnits="userSpaceOnUse" x1="-928.7722" y1="580.5435" x2="-928.7722" y2="579.5435" gradientTransform="matrix(36 0 0 -92 33441 53412.75)">
+			<stop  offset="0" style="stop-color:#F7FDFF"/>
+			<stop  offset="0.25" style="stop-color:#DFF4FF"/>
+			<stop  offset="0.6" style="stop-color:#A8DEFF"/>
+			<stop  offset="1" style="stop-color:#66BDF5"/>
+		</linearGradient>
+		<path style="fill:url(#SVGID_00000181048700322823302850000012438553721309405825_);stroke:#3C8FCB;stroke-width:2.4;" d="
+			M-3.8,2.8c0,0,2,14-3,27c-4.5,11-6,19-6,34v20c0,6,5,11,11,11h14c6,0,11-5,11-11v-20c0-15-1.5-23-6-34c-5-13-3-27-3-27H-3.8z"/>
+		<path class="st4" d="M-0.8,6.8c-2.5,17-6,25-8,34"/>
+		
+			<linearGradient id="SVGID_00000019675176889873727150000004342917028178987142_" gradientUnits="userSpaceOnUse" x1="-920.7629" y1="545.8333" x2="-919.7629" y2="544.8333" gradientTransform="matrix(27 0 0 -12 24852.3008 6573.75)">
+			<stop  offset="0" style="stop-color:#2F84FF"/>
+			<stop  offset="1" style="stop-color:#1F57C8"/>
+		</linearGradient>
+		<path style="fill:url(#SVGID_00000019675176889873727150000004342917028178987142_);stroke:#F7FBFF;stroke-width:1.6;" d="
+			M-5.5,23.8h21.4c1.5,0,2.8,1.3,2.8,2.8V33c0,1.5-1.3,2.8-2.8,2.8H-5.5c-1.5,0-2.8-1.3-2.8-2.8v-6.4C-8.3,25-7,23.8-5.5,23.8z"/>
+		
+			<linearGradient id="SVGID_00000149378415744589470280000011010292902775186338_" gradientUnits="userSpaceOnUse" x1="-921.4786" y1="569.2328" x2="-921.4786" y2="568.2328" gradientTransform="matrix(28 0 0 -29 25806.5996 16549.5)">
+			<stop  offset="0" style="stop-color:#F2FBFF"/>
+			<stop  offset="0.55" style="stop-color:#B8ECFF"/>
+			<stop  offset="1" style="stop-color:#7FD3FF"/>
+		</linearGradient>
+		<path style="fill:url(#SVGID_00000149378415744589470280000011010292902775186338_);stroke:#1C53B7;stroke-width:2;" d="
+			M-5.8,41.8h22c1.7,0,3,1.3,3,3v23c0,1.7-1.3,3-3,3h-22c-1.7,0-3-1.3-3-3v-23C-8.8,43.1-7.5,41.8-5.8,41.8z"/>
+		<path class="st7" d="M-5.8,60.8c4-4,8-2,12-6s7-2,10-6v14h-22V60.8z"/>
+		<path class="st8" d="M-5.8,64.8c4-3,8-1,12-5c4-3,7-1,10-5"/>
+		<path class="st9" d="M-5.8,68.8c3.5-2.5,8-0.5,12-4c4-3,7.5-1.5,10-4"/>
+		<path class="st10" d="M-3.9,27.8h18.2c1,0,1.9,0.9,1.9,1.9v0c0,1-0.9,1.9-1.9,1.9H-3.9c-1,0-1.9-0.9-1.9-1.9v0
+			C-5.8,28.6-4.9,27.8-3.9,27.8z"/>
+		<path class="st11" d="M-2.8,74.8h17c1.1,0,2,0.9,2,2l0,0c0,1.1-0.9,2-2,2h-17c-1.1,0-2-0.9-2-2l0,0C-4.8,75.6-3.9,74.8-2.8,74.8z"
+			/>
+		<ellipse class="st12" cx="9.2" cy="17.8" rx="2.5" ry="3.5"/>
+		<ellipse class="st13" cx="11.2" cy="39.8" rx="2.7" ry="3.2"/>
+		<ellipse class="st14" cx="0.2" cy="55.8" rx="2.3" ry="2.8"/>
+		<ellipse class="st15" cx="14.2" cy="78.8" rx="2.8" ry="3.3"/>
+		
+			<linearGradient id="SVGID_00000096021851368804261450000017284299856904221074_" gradientUnits="userSpaceOnUse" x1="-586.7" y1="578.9072" x2="-586.7" y2="577.9072" gradientTransform="matrix(2.5 0 0 -70 1484.2 40533.25)">
+			<stop  offset="0" style="stop-color:#D7F0FF"/>
+			<stop  offset="1" style="stop-color:#4AA8EA"/>
+		</linearGradient>
+		
+			<path style="opacity:0.45;fill:none;stroke:url(#SVGID_00000096021851368804261450000017284299856904221074_);stroke-width:2;stroke-linecap:round;enable-background:new    ;" d="
+			M16.2,9.8c1.5,8,2.5,14,2.5,23v47"/>
+	</g>
+</g>
 </svg>
