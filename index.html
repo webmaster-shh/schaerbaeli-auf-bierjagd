@@ -37,7 +37,7 @@
       <p class="intro">
         S'Schärbäli muess gnueg Vorrat für de Schmudo organisiere.
         Schnapp dier so viel 3er-Bierpäckli wie möglich, wiich de Hindernis us
-        und pass uf: Wasserfläsche gäbed dir Minuspünkt.
+        und pass uf: Wasserfläsche gäbed dier Minuspünkt.
       </p>
 
       <div class="input-group">
@@ -55,7 +55,7 @@
         <button id="impressumBtn" class="text-link-btn" type="button">Impressum</button>
       </div>
 
-      <a href="https://github.com/webmaster-shh/schaerbaeli-auf-bierjagd/releases" class="version-label" target="_blank">v1.2.1</a>
+      <a href="https://github.com/webmaster-shh/schaerbaeli-auf-bierjagd/releases" class="version-label" target="_blank">v2.0.0</a>
     </div>
 
     <!-- Help -->
@@ -65,9 +65,9 @@
       </div>
       <h2>Spielerklärung</h2>
       <div class="help-content">
-        <p>I dem Spiel stüürsch du s'Schärbäli dur en Hindernisparcours und sammlisch so viel Bier wie möglich.</p>
+        <p>I dem Spiel stüürsch du s'Schärbäli dur en Hindernisparcours und sammlisch so viel wie möglich.</p>
         <h3>Ziel vom Spiel</h3>
-        <p>Sammel möglichst viel Bier, ohni i es Hindernis ine z'flüge. Je meh Bier du sammlisch, desto besser wird dis Resultat.</p>
+        <p>Sammel möglichst viel Bier, ohni i es Hindernis ine z'flüge. Je meh du sammlisch, desto besser wird dis Resultat.</p>
         <h3>Steuerung</h3>
         <p>Du chasch s'Spiel mit Klick, Touch oder mit de Läärtaste starte und spiele. Jede Klick lad s'Schärbäli gäg ufe flüge.</p>
         <h3>So funktioniert s'Spiel</h3>
@@ -75,13 +75,15 @@
         <h3>Punkte</h3>
         <p>Wenn du es Bierpäckli iisammlisch, bechunsch du <strong>3 Pünkt</strong>. Wenn du e Wasserfläsche iisammlisch, verlürsch du <strong>1 Punkt</strong>.</p>
         <h3>Hindernisse</h3>
-        <p>Du muesch zwüsche Pföschte und Verchehrsschilder dureflüge. Sobald du es Hindernis berührsch oder obe bzw. unde useflügsch, isch s'Spiel verbii.</p>
+        <p>Du muesch zwüsche Wärbepföschte und Verchehrsschilder dureflüge. Sobald du es Hindernis berührsch oder obe bzw. unde useflügsch, isch s'Spiel verbii.</p>
         <h3>Schwierigkeit</h3>
-        <p>Mit de Ziit und mit höchere Punktzahl wird s'Spiel schwieriger: d'Hindernis chömed schneller und d'Abständ wärded chli änger.</p>
+        <p>Mit höchere Punktzahl wird s'Spiel schwieriger: d'Hindernis chömed schneller, d'Abständ wärded chli änger und es chömed meh Wasserfläsche.</p>
         <h3>Highscore</h3>
         <p>Din Name wird gspeicheret. Wenn dä Name scho existiert und du es bessers Resultat machsch, wird din Highscore aktualisiert.</p>
         <h3>Skins</h3>
-        <p>Skins wärded dür Achievments freigschaltet — wenn irgendein Spieler es Ziel erreicht, isch de Skin für alli verfüegbar. Im Skin-Menü chasch din aktuelle Look uswähle.</p>
+        <p>Skins wärded dur Achievments freigschaltet — wenn irgenden Spieler es Ziel erreicht, isch de Skin für alli verfüegbar. Im Skin-Menü chasch din aktuelle Look uswähle.</p>
+        <h3>Espresso Martini Theme</h3>
+        <p>Alli Bier wärded zu Espresso Martinis. I de Iistellige a- oder abschalte.</p>
       </div>
       <div class="legal-links legal-links-spaced">
         <button id="privacyFromHelpBtn" class="text-link-btn" type="button">Datenschutz</button>
@@ -99,8 +101,26 @@
       <div class="settings-content">
         <div class="setting-row">
           <div class="setting-info">
+            <span class="setting-label">☕🍸 Espresso Martini Theme</span>
+            <span class="setting-desc">Ändert s’Design – alli Bier wärded zu Espresso Martinis</span>
+          </div>
+          <button class="toggle-btn" id="drinkModeToggle" type="button" role="switch" aria-checked="true">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
+            <span class="setting-label">Sound</span>
+            <span class="setting-desc">Soundeffekte a- oder usschalte</span>
+          </div>
+          <button id="soundToggle" class="toggle-btn" role="switch" aria-checked="true">
+            <span class="toggle-knob"></span>
+          </button>
+        </div>
+        <div class="setting-row">
+          <div class="setting-info">
             <span class="setting-label">Hitbox Anzeige</span>
-            <span class="setting-desc">Zeigt de Kollisionsbereich ah</span>
+            <span class="setting-desc">Zeigt de Kollisionsberiich ah</span>
           </div>
           <button class="toggle-btn" id="hitboxToggle" type="button" role="switch" aria-checked="false">
             <span class="toggle-knob"></span>
@@ -175,7 +195,10 @@
       </div>
       <div class="canvas-shell">
         <div class="canvas-stage">
+          <div id="glitchLayer"></div>
           <canvas id="gameCanvas" width="400" height="700"></canvas>
+          <div id="endgameOverlay"></div>
+          <div id="warnIcon" class="warn-icon hidden" aria-label="Warnung: Endgame naht">⚠️</div>
           <div id="startOverlay" class="start-overlay hidden">
             <div class="start-overlay-card">Klick, Touch oder Läärtaste zum Startä</div>
           </div>
@@ -206,12 +229,16 @@
         </div>
 
         <div id="goldBox" class="gold-box hidden">
-          <div class="gold-title">DU BISCH LEGENDÄR</div>
-          <div class="gold-subtitle">Das isch kei normali Sammelrundi gsi. Das isch es Meisterwerk vo Durstvorsorg, Eskalationsplanig und absoluter Grössi.</div>
+          <div class="gold-title">GOLD-LEGÄNDE</div>
+          <div class="gold-subtitle" id="goldSubtitle">Das isch kei normali Sammelrundi gsi. Das isch es Meisterwerk vo Durstvorsorg, Eskalationsplanig und absoluter Grössi.</div>
         </div>
         <div id="platinumBox" class="platinum-box hidden">
           <div class="platinum-title">PLATIN-LEGÄNDE</div>
-          <div class="platinum-subtitle">Das isch nümme nume legendär. Das isch d'Endstufe vo Bierlogistik, Flugpräzision und völliger Eskalationskompetänz.</div>
+          <div class="platinum-subtitle" id="platinumSubtitle">Das isch nümme nume legendär. Das isch d'Endstufe vo Bierlogistik, Flugpräzision und völliger Eskalationskompetänz.</div>
+        </div>
+        <div id="smaragdBox" class="smaragd-box hidden">
+          <div class="smaragd-title">SMARAGD-LEGÄNDE</div>
+          <div class="smaragd-subtitle" id="smaragdSubtitle">Du hesch ned nur Bier gsammlet, du hesch es Versorgigsimperium ufbaut. Wenn irgendwo im Land Bier fählt, wird din Name gflüstered.</div>
         </div>
 
         <!-- Newly unlocked achievement -->
